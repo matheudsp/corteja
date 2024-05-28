@@ -1,0 +1,8 @@
+import { Router } from "express";
+
+const router = Router()
+
+router.get('/teste')
+
+export {router};
+
