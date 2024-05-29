@@ -16,14 +16,15 @@ datasource db {
 model Cliente {
   id        String     @id @default(uuid())
   nome      String
-  telefone  String     @unique
+  telefone  String?    @unique
   email     String     @unique
   senha     String
-  cpf       String?
+  cpf       String?    @unique
   status    Status     @default(Ativo)
   enderecos Endereco[] //1-N
   criadoEm  DateTime   @default(now())
 
+  salaos Salao[]
   agendamentos Agendamento[] // 1-N
 }
 
@@ -32,14 +33,14 @@ model Endereco {
   cidade    String?
   clienteId String
 
-  clientes Cliente @relation(fields: [clienteId], references: [id])
+  cliente Cliente @relation(fields: [clienteId], references: [id])
 }
 
-model Arquivos {
-  id String @id @default(uuid())
-  tipo Tipo 
+model Arquivo {
+  id       String   @id @default(uuid())
+  tipo     Tipo
   criadoEm DateTime @default(now())
-  url String
+  url      String
 }
 
 model Salao {
@@ -48,7 +49,7 @@ model Salao {
   foto           String
   capa           String
   email          String   @unique
-  telefone       String   @unique
+  telefone       String?  @unique
   enderecoCidade String
   enderecoUf     String
   enderecoCep    String
@@ -56,6 +57,9 @@ model Salao {
   enderecoPais   String
   geoCoordenadas String[]
   criadoEm       DateTime @default(now())
+
+  cliente        Cliente?        @relation(fields: [clienteId], references: [id])
+  clienteId      String?
 
   colaboradores Colaborador[]
   cupons        Cupom[]
@@ -71,7 +75,7 @@ model Colaborador {
   email          String   @unique
   senha          String
   descricao      String?
-  dataNascimento String
+  dataNascimento DateTime
   cpf            String?
   criadoEm       DateTime @default(now())
 
@@ -110,7 +114,7 @@ model Cupom {
   usosRestantes Int
   status        Status        @default(Ativo)
   salaoId       String?
-  salao         Salao?         @relation(fields: [salaoId], references: [id])
+  salao         Salao?        @relation(fields: [salaoId], references: [id])
   agendamentos  Agendamento[] // 1-N
 }
 
