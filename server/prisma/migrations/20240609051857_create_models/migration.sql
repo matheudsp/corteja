@@ -19,12 +19,12 @@ CREATE TABLE "Cliente" (
 );
 
 -- CreateTable
-CREATE TABLE "Endereco" (
+CREATE TABLE "EnderecoCliente" (
     "id" SERIAL NOT NULL,
     "cidade" TEXT,
     "clienteId" TEXT NOT NULL,
 
-    CONSTRAINT "Endereco_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "EnderecoCliente_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -44,13 +44,13 @@ CREATE TABLE "Salao" (
     "foto" TEXT NOT NULL,
     "capa" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "senha" TEXT NOT NULL,
     "telefone" TEXT,
     "enderecoCidade" TEXT NOT NULL,
     "enderecoUf" TEXT NOT NULL,
     "enderecoCep" TEXT NOT NULL,
-    "enderecoNumero" TEXT NOT NULL,
+    "enderecoNumero" TEXT,
     "enderecoPais" TEXT NOT NULL,
-    "geoCoordenadas" TEXT[],
     "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "clienteId" TEXT,
 
@@ -58,31 +58,48 @@ CREATE TABLE "Salao" (
 );
 
 -- CreateTable
+CREATE TABLE "Coordenadas" (
+    "id" TEXT NOT NULL,
+    "tipo" TEXT NOT NULL,
+    "coordenadas" DOUBLE PRECISION[],
+    "salaoId" TEXT NOT NULL,
+
+    CONSTRAINT "Coordenadas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Colaborador" (
     "id" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
+    "foto" TEXT,
     "telefone" TEXT,
-    "email" TEXT NOT NULL,
-    "senha" TEXT NOT NULL,
+    "email" TEXT,
     "descricao" TEXT,
-    "dataNascimento" TIMESTAMP(3) NOT NULL,
-    "cpf" TEXT,
+    "status" "Status" NOT NULL DEFAULT 'Ativo',
     "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "salaoId" TEXT,
+    "salaoId" TEXT NOT NULL,
 
     CONSTRAINT "Colaborador_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
+CREATE TABLE "Colaborador_Servico" (
+    "colaboradorId" TEXT NOT NULL,
+    "servicoId" TEXT NOT NULL,
+
+    CONSTRAINT "Colaborador_Servico_pkey" PRIMARY KEY ("colaboradorId","servicoId")
+);
+
+-- CreateTable
 CREATE TABLE "Servico" (
     "id" TEXT NOT NULL,
+    "foto" TEXT,
     "titulo" TEXT NOT NULL,
     "preco" DOUBLE PRECISION NOT NULL,
     "duracao" INTEGER NOT NULL,
     "recorrencia" INTEGER,
-    "descricao" TEXT NOT NULL,
+    "descricao" TEXT,
     "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "colaboradorId" TEXT,
     "salaoId" TEXT NOT NULL,
 
     CONSTRAINT "Servico_pkey" PRIMARY KEY ("id")
@@ -91,14 +108,15 @@ CREATE TABLE "Servico" (
 -- CreateTable
 CREATE TABLE "Cupom" (
     "id" TEXT NOT NULL,
+    "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "valor" DOUBLE PRECISION NOT NULL,
-    "dataInicio" TIMESTAMP(3) NOT NULL,
-    "dataFim" TIMESTAMP(3) NOT NULL,
+    "dataInicio" TIMESTAMP(3),
+    "dataFim" TIMESTAMP(3),
     "codigo" TEXT NOT NULL,
     "quantidadeUso" INTEGER NOT NULL,
     "usosRestantes" INTEGER NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'Ativo',
-    "salaoId" TEXT,
+    "salaoId" TEXT NOT NULL,
 
     CONSTRAINT "Cupom_pkey" PRIMARY KEY ("id")
 );
@@ -119,15 +137,29 @@ CREATE TABLE "Agendamento" (
 );
 
 -- CreateTable
+CREATE TABLE "Horarios_Servicos" (
+    "horarioId" TEXT NOT NULL,
+    "servicoId" TEXT NOT NULL,
+
+    CONSTRAINT "Horarios_Servicos_pkey" PRIMARY KEY ("horarioId","servicoId")
+);
+
+-- CreateTable
+CREATE TABLE "Horarios_Colaboradores" (
+    "horarioId" TEXT NOT NULL,
+    "colaboradorId" TEXT NOT NULL,
+
+    CONSTRAINT "Horarios_Colaboradores_pkey" PRIMARY KEY ("horarioId","colaboradorId")
+);
+
+-- CreateTable
 CREATE TABLE "Horario" (
     "id" TEXT NOT NULL,
-    "dias" INTEGER NOT NULL,
+    "dias" INTEGER[],
     "horarioInicio" TIMESTAMP(3) NOT NULL,
-    "horarioTermino" TIMESTAMP(3) NOT NULL,
+    "horarioFim" TIMESTAMP(3) NOT NULL,
     "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "salaoId" TEXT NOT NULL,
-    "servicoId" TEXT NOT NULL,
-    "colaboradorId" TEXT NOT NULL,
 
     CONSTRAINT "Horario_pkey" PRIMARY KEY ("id")
 );
@@ -148,28 +180,37 @@ CREATE UNIQUE INDEX "Salao_email_key" ON "Salao"("email");
 CREATE UNIQUE INDEX "Salao_telefone_key" ON "Salao"("telefone");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Coordenadas_salaoId_key" ON "Coordenadas"("salaoId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Colaborador_telefone_key" ON "Colaborador"("telefone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Colaborador_email_key" ON "Colaborador"("email");
 
 -- AddForeignKey
-ALTER TABLE "Endereco" ADD CONSTRAINT "Endereco_clienteId_fkey" FOREIGN KEY ("clienteId") REFERENCES "Cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "EnderecoCliente" ADD CONSTRAINT "EnderecoCliente_clienteId_fkey" FOREIGN KEY ("clienteId") REFERENCES "Cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Salao" ADD CONSTRAINT "Salao_clienteId_fkey" FOREIGN KEY ("clienteId") REFERENCES "Cliente"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Colaborador" ADD CONSTRAINT "Colaborador_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Coordenadas" ADD CONSTRAINT "Coordenadas_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Servico" ADD CONSTRAINT "Servico_colaboradorId_fkey" FOREIGN KEY ("colaboradorId") REFERENCES "Colaborador"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Colaborador" ADD CONSTRAINT "Colaborador_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Colaborador_Servico" ADD CONSTRAINT "Colaborador_Servico_colaboradorId_fkey" FOREIGN KEY ("colaboradorId") REFERENCES "Colaborador"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Colaborador_Servico" ADD CONSTRAINT "Colaborador_Servico_servicoId_fkey" FOREIGN KEY ("servicoId") REFERENCES "Servico"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Servico" ADD CONSTRAINT "Servico_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cupom" ADD CONSTRAINT "Cupom_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Cupom" ADD CONSTRAINT "Cupom_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Agendamento" ADD CONSTRAINT "Agendamento_cupomId_fkey" FOREIGN KEY ("cupomId") REFERENCES "Cupom"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -187,10 +228,16 @@ ALTER TABLE "Agendamento" ADD CONSTRAINT "Agendamento_colaboradorId_fkey" FOREIG
 ALTER TABLE "Agendamento" ADD CONSTRAINT "Agendamento_clienteId_fkey" FOREIGN KEY ("clienteId") REFERENCES "Cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Horarios_Servicos" ADD CONSTRAINT "Horarios_Servicos_horarioId_fkey" FOREIGN KEY ("horarioId") REFERENCES "Horario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Horarios_Servicos" ADD CONSTRAINT "Horarios_Servicos_servicoId_fkey" FOREIGN KEY ("servicoId") REFERENCES "Servico"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Horarios_Colaboradores" ADD CONSTRAINT "Horarios_Colaboradores_horarioId_fkey" FOREIGN KEY ("horarioId") REFERENCES "Horario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Horarios_Colaboradores" ADD CONSTRAINT "Horarios_Colaboradores_colaboradorId_fkey" FOREIGN KEY ("colaboradorId") REFERENCES "Colaborador"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Horario" ADD CONSTRAINT "Horario_salaoId_fkey" FOREIGN KEY ("salaoId") REFERENCES "Salao"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Horario" ADD CONSTRAINT "Horario_servicoId_fkey" FOREIGN KEY ("servicoId") REFERENCES "Servico"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Horario" ADD CONSTRAINT "Horario_colaboradorId_fkey" FOREIGN KEY ("colaboradorId") REFERENCES "Colaborador"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

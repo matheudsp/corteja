@@ -1,5 +1,6 @@
 declare namespace Express{
     export interface Request{
-      clientId: string;
+      client_id:string
+      salon_id: string;
     }
   }

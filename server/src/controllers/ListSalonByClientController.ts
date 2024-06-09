@@ -1,10 +1,10 @@
 import {Request, Response} from 'express';
 import { ListSalonByClientService } from '../services/ListSalonByClientService';
-import prismaClient from '../prisma';
+
 
 class ListSalonByClientController{
     async handle(req: Request, res: Response){
-        const clientId = req.clientId
+        const clientId = req.client_id
 
         const service = new ListSalonByClientService();
 

@@ -14,21 +14,21 @@ datasource db {
 }
 
 model Cliente {
-  id        String     @id @default(uuid())
+  id        String            @id @default(uuid())
   nome      String
-  telefone  String?    @unique
-  email     String     @unique
+  telefone  String?           @unique
+  email     String            @unique
   senha     String
-  cpf       String?    @unique
-  status    Status     @default(Ativo)
-  enderecos Endereco[] //1-N
-  criadoEm  DateTime   @default(now())
+  cpf       String?           @unique
+  status    Status            @default(Ativo)
+  enderecos EnderecoCliente[] //1-N
+  criadoEm  DateTime          @default(now())
 
-  salaos Salao[]
+  salaos       Salao[]
   agendamentos Agendamento[] // 1-N
 }
 
-model Endereco {
+model EnderecoCliente {
   id        Int     @id @default(autoincrement())
   cidade    String?
   clienteId String
@@ -44,22 +44,23 @@ model Arquivo {
 }
 
 model Salao {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   nome           String
   foto           String
   capa           String
-  email          String   @unique
-  telefone       String?  @unique
+  email          String       @unique
+  senha          String
+  telefone       String?      @unique
   enderecoCidade String
   enderecoUf     String
   enderecoCep    String
-  enderecoNumero String
+  enderecoNumero String?
   enderecoPais   String
-  geoCoordenadas String[]
-  criadoEm       DateTime @default(now())
+  geoCoordenadas Coordenadas?
+  criadoEm       DateTime     @default(now())
 
-  cliente        Cliente?        @relation(fields: [clienteId], references: [id])
-  clienteId      String?
+  cliente   Cliente? @relation(fields: [clienteId], references: [id])
+  clienteId String?
 
   colaboradores Colaborador[]
   cupons        Cupom[]
@@ -68,53 +69,62 @@ model Salao {
   horarios      Horario[] // 1-N
 }
 
-model Colaborador {
-  id             String   @id @default(uuid())
-  nome           String
-  telefone       String?  @unique
-  email          String   @unique
-  senha          String
-  descricao      String?
-  dataNascimento DateTime
-  cpf            String?
-  criadoEm       DateTime @default(now())
+model Coordenadas {
+  id          String  @id @default(uuid())
+  tipo        String
+  coordenadas Float[]
 
-  servicos     Servico[]
-  agendamentos Agendamento[] // 1-N
-  horarios     Horario[]
-  Salao        Salao?        @relation(fields: [salaoId], references: [id])
-  salaoId      String?
+  salao   Salao  @relation(fields: [salaoId], references: [id])
+  salaoId String @unique
 }
 
-model Servico {
-  id String @id @default(uuid())
+model Colaborador {
+  id        String   @id @default(uuid())
+  nome      String
+  foto      String?
+  telefone  String?  @unique
+  email     String?  @unique
+  descricao String?
+  status    Status   @default(Ativo)
+  criadoEm  DateTime @default(now())
 
+  servicos     Colaborador_Servico[]
+  agendamentos Agendamento[] // 1-N
+  horarios     Horarios_Colaboradores[]
+  Salao        Salao                    @relation(fields: [salaoId], references: [id])
+  salaoId      String
+}
+
+
+model Servico {
+  id          String   @id @default(uuid())
+  foto        String?
   titulo      String
   preco       Float
   duracao     Int
   recorrencia Int?
-  descricao   String
+  descricao   String?
   criadoEm    DateTime @default(now())
 
   agendamentos  Agendamento[]
-  horarios      Horario[]
-  colaboradorId String?
-  colaborador   Colaborador?  @relation(fields: [colaboradorId], references: [id])
+  horarios      Horarios_Servicos[]
+  colaboradores Colaborador_Servico[]
   salaoId       String
-  salao         Salao         @relation(fields: [salaoId], references: [id])
+  salao         Salao                @relation(fields: [salaoId], references: [id])
 }
 
 model Cupom {
   id            String        @id @default(uuid())
+  criadoEm      DateTime      @default(now())
   valor         Float
-  dataInicio    DateTime
-  dataFim       DateTime
+  dataInicio    DateTime?
+  dataFim       DateTime?
   codigo        String
   quantidadeUso Int
   usosRestantes Int
   status        Status        @default(Ativo)
-  salaoId       String?
-  salao         Salao?        @relation(fields: [salaoId], references: [id])
+  salaoId       String
+  salao         Salao         @relation(fields: [salaoId], references: [id])
   agendamentos  Agendamento[] // 1-N
 }
 
@@ -123,31 +133,63 @@ model Agendamento {
   data          DateTime
   valor         Float
   criadoEm      DateTime    @default(now())
+
   cupom         Cupom?      @relation(fields: [cupomId], references: [id])
   cupomId       String?
+
   salao         Salao       @relation(fields: [salaoId], references: [id])
   salaoId       String
+
   servico       Servico     @relation(fields: [servicoId], references: [id])
   servicoId     String
+
   colaborador   Colaborador @relation(fields: [colaboradorId], references: [id])
   colaboradorId String
+  
   cliente       Cliente     @relation(fields: [clienteId], references: [id])
   clienteId     String
 }
 
 model Horario {
-  id             String      @id @default(uuid())
-  dias           Int // Dias da semana para agendamento, domingo - 0 ... sabado - 6
-  horarioInicio  DateTime
-  horarioTermino DateTime
-  criadoEm       DateTime    @default(now())
-  salao          Salao       @relation(fields: [salaoId], references: [id])
-  salaoId        String
-  servico        Servico     @relation(fields: [servicoId], references: [id])
-  servicoId      String
-  colaborador    Colaborador @relation(fields: [colaboradorId], references: [id])
-  colaboradorId  String
+  id            String                   @id @default(uuid())
+  dias          Int[] // Dias da semana para agendamento, domingo - 0 ... sabado - 6
+  horarioInicio DateTime
+  horarioFim    DateTime
+  criadoEm      DateTime                 @default(now())
+  salao         Salao                    @relation(fields: [salaoId], references: [id])
+  salaoId       String
+  servicos      Horarios_Servicos[]
+  colaboradores Horarios_Colaboradores[]
 }
+
+// ------------- RELATIONS ------------------
+
+model Colaborador_Servico {
+  colaboradorId String
+  servicoId     String
+
+  colaborador Colaborador @relation(fields: [colaboradorId], references: [id])
+  servico     Servico     @relation(fields: [servicoId], references: [id])
+
+  @@id([colaboradorId, servicoId])
+}
+
+model Horarios_Servicos {
+  horarioId  String
+  servicoId  String
+  horario    Horario    @relation(fields: [horarioId], references: [id])
+  servico    Servico    @relation(fields: [servicoId], references: [id])
+  @@id([horarioId, servicoId])
+}
+
+model Horarios_Colaboradores {
+  horarioId     String
+  colaboradorId String
+  horario       Horario       @relation(fields: [horarioId], references: [id])
+  colaborador   Colaborador   @relation(fields: [colaboradorId], references: [id])
+  @@id([horarioId, colaboradorId])
+}
+
 
 enum Status {
   Ativo
