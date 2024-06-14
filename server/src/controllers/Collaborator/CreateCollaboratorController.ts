@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import { CreateCollaboratorService } from '../services/CreateCollaboratorService';
+import { CreateCollaboratorService } from '../../services/Collaborator/CreateCollaboratorService';
 
 
 class CreateCollaboratorController{

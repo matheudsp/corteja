@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateCouponService } from '../services/CreateCouponService';
+import { CreateCouponService } from '../../services/Coupon/CreateCouponService';
 
 
 class CreateCouponController {

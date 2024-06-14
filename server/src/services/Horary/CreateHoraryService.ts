@@ -1,4 +1,4 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma";
 
 interface Request {
     salaoId: string,
@@ -10,7 +10,7 @@ interface Request {
 
 }
 
-class CreateScheduleService {
+class CreateHoraryService {
     async execute({
         salaoId,
         servicos,
@@ -57,4 +57,4 @@ class CreateScheduleService {
     }
 }
 
-export { CreateScheduleService };
+export { CreateHoraryService };

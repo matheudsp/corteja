@@ -1,25 +1,23 @@
 import { Request, Response } from 'express';
-import { CreateServiceService } from '../services/CreateServiceService';
+import { UpdateServiceService } from '../../services/Service/UpdateServiceService';
 
-
-class CreateServiceController {
+class UpdateServiceController {
     async handle(req: Request, res: Response) {
 
-        // const salaoId = req.salon_id
+        const serviceId = req.params.id
         const {
             titulo,
             descricao,
             duracao,
             preco,
             recorrencia,
-            foto,
-            salaoId
+            foto
         } = req.body;
 
-        const service = new CreateServiceService();
+        const service = new UpdateServiceService();
 
         const controller = await service.execute({
-            salaoId,
+            serviceId,
             titulo,
             descricao,
             duracao,
@@ -33,4 +31,4 @@ class CreateServiceController {
     }
 }
 
-export { CreateServiceController }
+export { UpdateServiceController }

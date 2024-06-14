@@ -1,5 +1,10 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma"
 import { hash } from 'bcryptjs';
+
+interface Coordenadas {
+    tipo: string;
+    coordenadas: number[];
+}
 
 interface Request {
     nome: string;
@@ -13,14 +18,9 @@ interface Request {
     enderecoCep: string;
     enderecoNumero: string;
     enderecoPais: string;
-    geoCoordenadas: coordenadas[];
+    geoCoordenadas: Coordenadas;
 
     
-}
-
-type coordenadas = {
-    tipo: string;
-    coordenadas: [];
 }
 
 
@@ -81,7 +81,13 @@ class CreateSalonService {
                 enderecoCep:enderecoCep,
                 enderecoNumero: enderecoNumero,
                 enderecoPais: 'Brasil',
-                telefone: telefone
+                telefone: telefone,
+                geoCoordenadas: {
+                    create: {
+                        tipo: geoCoordenadas.tipo,
+                        coordenadas: geoCoordenadas.coordenadas
+                    }
+                }
             },
             select: {
                 id: true,

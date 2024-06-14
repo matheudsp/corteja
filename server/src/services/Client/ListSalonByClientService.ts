@@ -1,4 +1,4 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma";
 //pesquisar salões onde cliente está inscrito
 class ListSalonByClientService{
     async execute(clientId: string) {

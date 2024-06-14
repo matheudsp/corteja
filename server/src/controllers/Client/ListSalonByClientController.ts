@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import { ListSalonByClientService } from '../services/ListSalonByClientService';
+import { ListSalonByClientService } from '../../services/Client/ListSalonByClientService';
 
 
 class ListSalonByClientController{

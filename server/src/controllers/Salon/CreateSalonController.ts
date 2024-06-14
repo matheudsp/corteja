@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import { CreateSalonService } from '../services/CreateSalonService';
+import { CreateSalonService } from '../../services/Salon/CreateSalonService';
 
 
 class CreateSalonController{

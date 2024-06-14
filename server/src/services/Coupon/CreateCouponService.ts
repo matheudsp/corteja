@@ -1,4 +1,4 @@
-import prismaClient from "../prisma";
+import prismaClient from "../../prisma";
 
 interface Request {
     salaoId: string,
@@ -16,6 +16,17 @@ class CreateCouponService{
         salaoId, valor, dataInicio, dataFim, codigo, quantidadeUso,
         usosRestantes
     }: Request) {
+
+        const codigoExistente = await prismaClient.cupom.findFirst({
+            where:{
+                codigo: codigo
+            }
+        })
+
+        if (codigoExistente) {
+            throw new Error("Código do cupom existente.")
+        }
+
         const service = await prismaClient.cupom.create({
             data:{  
                 salaoId: salaoId,

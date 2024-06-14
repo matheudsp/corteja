@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateScheduleService } from '../services/CreateScheduleService';
+import { CreateScheduleService } from '../../services/Schedule/CreateScheduleService';
 
 
 class CreateScheduleController {
@@ -8,24 +8,23 @@ class CreateScheduleController {
         // const salaoId = req.salon_id
 
         const {
+            data,
+            cupomId,
             salaoId,
-            servicos,
-            colaboradores,
-            dias,
-            horarioInicio,
-            horarioFim
-
+            servicoId,
+            colaboradorId,
+            clienteId
         } = req.body;
 
         const service = new CreateScheduleService();
 
         const controller = await service.execute({
+            data,
+            cupomId,
             salaoId,
-            servicos,
-            colaboradores,
-            dias,
-            horarioInicio,
-            horarioFim
+            servicoId,
+            colaboradorId,
+            clienteId
         });
 
         return res.json(controller)
