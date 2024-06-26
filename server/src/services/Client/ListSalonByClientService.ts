@@ -11,6 +11,10 @@ class ListSalonByClientService{
             }
         })
 
+        if(!cliente){
+            throw new Error('Erro ao procurar usuário.')
+        }
+
         return cliente;
     }
 }

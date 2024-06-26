@@ -28,6 +28,9 @@ import { ListHoraryController } from "./controllers/Horary/ListHoraryBySalonCont
 import { ListHoraryByServiceController } from "./controllers/Horary/ListHoraryByServiceController";
 import { ListCollaboratorsBySalonController } from "./controllers/Collaborator/ListCollaboratorsBySalonController";
 import { FilterSalonController } from "./controllers/Salon/FilterSalonController";
+import { ListScheduleByDisponibilityController } from "./controllers/Schedule/ListScheduleByDisponibilityController";
+import { FilterScheduleController } from "./controllers/Schedule/FilterScheduleController";
+import { SubscribeSalonController } from "./controllers/Client/SubscribeSalonController";
 
 
 const router = Router()
@@ -47,7 +50,7 @@ router.post('/cliente', new CreateClientController().handle)
 //logout
 
 // rota para inscrever o cliente ao salao
-
+router.get('/cliente/:id/favoritar', new SubscribeSalonController().handle)
 
 //COLABORADOR
 // criar colaborador
@@ -63,7 +66,6 @@ router.post('/salao', new CreateSalonController().handle)
 // rota para listar todos salões no raio de filter(distancia alterável pelo usuario, cidade, nome)
 router.post('/salao/filter', new FilterSalonController().handle)
 // listar detalhes do salao
-// FALTA ADICIONAR O VERIFICADOR DE HORARIO UTILIZANDO O MOMENT OU ALGO DO TIPO
 router.get('/salao/:id', new DetailSalonController().handle)
 // listar clientes do salao
 router.get('/salao/clientes/:id', new ListAllClientsController().handle)
@@ -110,9 +112,9 @@ router.delete('/horario/:id', new DeleteHoraryController().handle)
 // criar agendamento
 router.post('/agendamento', new CreateScheduleController().handle )
 // filtrar agendamentos em data especificas
-router.post('/agendamento/filter')
+router.post('/agendamento/filter', new FilterScheduleController().handle)
 // verificar dias disponiveis 
-router.post('/agendamento/dias-disponiveis')
+router.post('/agendamento/dias-disponiveis', new ListScheduleByDisponibilityController().handle)
 
 
 

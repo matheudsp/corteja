@@ -8,12 +8,14 @@ class DetailSalonService {
                 id: salonId
             },
             select:{
+                id:true,
                 servicos:true,
                 agendamentos:false,
                 enderecoPais:false,
                 enderecoCep:false,
                 senha:false,
                 enderecoUf:false,
+                colaboradores:true,
                 geoCoordenadas:{
                     select:{
                         id:false,

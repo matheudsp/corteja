@@ -75,7 +75,7 @@ model Coordenadas {
   tipo        String
   coordenadas Float[]
 
-  salao   Salao  @relation(fields: [salaoId], references: [id])
+  salao   Salao  @relation(fields: [salaoId], references: [id], onDelete: Cascade)
   salaoId String @unique
 }
 
@@ -105,12 +105,12 @@ model Servico {
   recorrencia Int?
   descricao   String?
   criadoEm    DateTime @default(now())
-
+  status        Status        @default(Ativo)
   agendamentos  Agendamento[]
   horarios      Horarios_Servicos[]
   colaboradores Colaborador_Servico[]
   salaoId       String
-  salao         Salao                 @relation(fields: [salaoId], references: [id])
+  salao         Salao                 @relation(fields: [salaoId], references: [id], onDelete: Cascade)
 }
 
 model Cupom {
@@ -124,7 +124,7 @@ model Cupom {
   usosRestantes Int
   status        Status        @default(Ativo)
   salaoId       String
-  salao         Salao         @relation(fields: [salaoId], references: [id])
+  salao         Salao         @relation(fields: [salaoId], references: [id], onDelete: Cascade)
   agendamentos  Agendamento[] // 1-N
 }
 
@@ -136,7 +136,7 @@ model Agendamento {
   cupom   Cupom?  @relation(fields: [cupomId], references: [id])
   cupomId String?
 
-  salao   Salao  @relation(fields: [salaoId], references: [id])
+  salao   Salao  @relation(fields: [salaoId], references: [id], onDelete:NoAction )
   salaoId String
 
   servico   Servico @relation(fields: [servicoId], references: [id])
@@ -155,7 +155,7 @@ model Horario {
   horarioInicio DateTime
   horarioFim    DateTime
   criadoEm      DateTime                 @default(now())
-  salao         Salao                    @relation(fields: [salaoId], references: [id])
+  salao         Salao                    @relation(fields: [salaoId], references: [id], onDelete: Cascade)
   salaoId       String
   servicos      Horarios_Servicos[]
   colaboradores Horarios_Colaboradores[]
@@ -198,7 +198,7 @@ model Cliente_Salao {
   clienteId String
 
   cliente Cliente @relation(fields: [clienteId], references: [id])
-  salao   Salao   @relation(fields: [salaoId], references: [id])
+  salao   Salao   @relation(fields: [salaoId], references: [id], onDelete: Cascade)
 
   @@unique([clienteId, salaoId])
 }

@@ -11,7 +11,7 @@ export function isAuthenticated(req: Request,res: Response,next: NextFunction){
   const authToken = req.headers.authorization;
 
   if(!authToken){
-    return res.status(401).end();
+    return res.status(401).json({erro: 'Não-autorizado - Token inválido.'}).end;
   }
 
   const [, token] = authToken.split(" ")
@@ -30,7 +30,7 @@ export function isAuthenticated(req: Request,res: Response,next: NextFunction){
     return next();
 
   }catch(err){
-    return res.status(401).end();
+    return res.status(401).json({erro: err}).end;
   }
 
 

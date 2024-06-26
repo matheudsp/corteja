@@ -16,7 +16,9 @@ class CreateSalonController{
             enderecoUf, 
             enderecoCep, 
             enderecoNumero, 
-            geoCoordenadas} = req.body;
+            geoCoordenadas,
+            enderecoBairro,
+            enderecoRua } = req.body;
 
         const service = new CreateSalonService();
 
@@ -30,6 +32,8 @@ class CreateSalonController{
           enderecoCidade,
           enderecoCep,
           enderecoNumero,
+          enderecoBairro,
+          enderecoRua,
           enderecoUf,
           geoCoordenadas,
           enderecoPais

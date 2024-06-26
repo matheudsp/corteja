@@ -16,11 +16,12 @@ interface Request {
     enderecoCidade: string;
     enderecoUf: string;
     enderecoCep: string;
+    enderecoBairro: string,
+    enderecoRua: string, 
     enderecoNumero: string;
     enderecoPais: string;
     geoCoordenadas: Coordenadas;
 
-    
 }
 
 
@@ -36,7 +37,9 @@ class CreateSalonService {
         enderecoUf, 
         enderecoCep, 
         enderecoNumero, 
-        enderecoPais, 
+        enderecoPais,
+        enderecoBairro,
+        enderecoRua, 
         geoCoordenadas}: Request){
         
         // validacao
@@ -77,6 +80,8 @@ class CreateSalonService {
                 email: email, 
                 senha: senhaHash,
                 enderecoCidade: enderecoCidade,
+                enderecoBairro: enderecoBairro,
+                enderecoRua: enderecoRua,
                 enderecoUf:enderecoUf,
                 enderecoCep:enderecoCep,
                 enderecoNumero: enderecoNumero,
