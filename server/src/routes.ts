@@ -50,7 +50,7 @@ router.post('/cliente', new CreateClientController().handle)
 //logout
 
 // rota para inscrever o cliente ao salao
-router.get('/cliente/:id/favoritar', new SubscribeSalonController().handle)
+router.get('/cliente/:id/favoritar',  isAuthenticated,new SubscribeSalonController().handle)
 
 //COLABORADOR
 // criar colaborador

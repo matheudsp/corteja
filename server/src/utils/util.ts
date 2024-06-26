@@ -1,8 +1,28 @@
 // utils/util.ts
 
 import dayjs from 'dayjs';
-
+import isBetween from 'dayjs/plugin/isBetween';
 export const SLOT_DURATION = 45; // Duração do slot em minutos
+
+dayjs.extend(isBetween);
+
+
+export async function isOpened(horarios: any[]) {
+  // VERIFICANDO SE EXISTE REGISTRO NAQUELE DIA DA SEMANA
+  const horariosDia = horarios.filter((h) => h.dias.includes(dayjs().day()));
+  if (horariosDia.length > 0) {
+      // VERIFICANDO HORARIOS
+      for (let h of horariosDia) {
+          const inicio = dayjs(dayjs(h.horarioInicio).format('HH:mm'), 'HH:mm:ss');
+          const fim = dayjs(dayjs(h.horarioFim).format('HH:mm'), 'HH:mm:ss');
+          if (dayjs().isBetween(inicio, fim)) {
+              return true;
+          }
+      }
+      return false;
+  }
+  return false;
+}
 
 /**
  * Combina uma data e hora em uma string no formato ISO 8601 (YYYY-MM-DDTHH:mm).
