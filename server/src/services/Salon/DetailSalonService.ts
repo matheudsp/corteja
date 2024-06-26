@@ -1,5 +1,4 @@
 import prismaClient from "../../prisma";
-import * as turf from "@turf/turf";
 import { isOpened as checkIsOpened } from "../../utils/util";
 
 class DetailSalonService {
@@ -9,6 +8,7 @@ class DetailSalonService {
                 id: salonId
             },
             select:{
+                servicos:true,
                 agendamentos:false,
                 enderecoPais:false,
                 enderecoCep:false,
@@ -24,12 +24,7 @@ class DetailSalonService {
             }
         })
 
-        const distanciaSalao = turf.distance( 
-            turf.point(salao.geoCoordenadas.coordenadas),
-            turf.point([-6.7688238527523845, -43.02628642407135]), //coordenadas que serão recebidas do usuario
-            {units: "kilometers"}
-        ).toFixed(1)
-                
+        
         const horarios = await prismaClient.horario.findMany({
             where:{
                 salaoId: salonId
@@ -44,7 +39,7 @@ class DetailSalonService {
         const salonIsOpened = await checkIsOpened(horarios);
 
             
-        const service = {...salao, distanciaSalao, isOpened: salonIsOpened}
+        const service = {...salao, isOpened: salonIsOpened}
         return service;
     }
 }

@@ -6,7 +6,7 @@ dayjs.extend(isBetween);
 dayjs.extend(customParseFormat);
 
 
-export const SLOT_DURATION = 30; // MINUTOS
+export const SLOT_DURATION = 45; // MINUTOS
 
 interface Horario {
   dias: number[];
@@ -34,10 +34,16 @@ export const toCents = (price: number): number => {
   return parseInt(price.toString().replace('.', '').replace(',', ''));
 };
 
-export const mergeDateTime = (date: string | Date, time: string): string => {
-  const merged = `${dayjs(date).format('YYYY-MM-DD')}T${dayjs(time).format('HH:mm')}`;
+// pode estar causando erro
+export const mergeDateTime = (date: any, time: any): any => {
+  const merged = `${dayjs(date).format('YYYY-MM-DD')}T${dayjs(time).format(
+    'HH:mm'
+  )}`;
+  //console.log(merged);
   return merged;
 };
+
+
 
 export const sliceMinutes = (
   start: string | Date,

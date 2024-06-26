@@ -1,7 +1,7 @@
 import prismaClient from "../../prisma";
 
 interface Request {
-    salaoId: string,
+    horarioId: string,
     servicos: string[],
     colaboradores: string[],
     dias: number[],
@@ -10,42 +10,54 @@ interface Request {
 
 }
 
-class CreateHoraryService {
+class UpdateHoraryService {
     async execute({
-        salaoId,
+        horarioId,
         servicos,
         colaboradores,
         dias,
         horarioInicio,
         horarioFim
     }: Request) {
-
-        // Cria o Horario
-        const horario = await prismaClient.horario.create({
+        
+        const horario = await prismaClient.horario.update({
+            where:{
+                id: horarioId
+            },
             data: {
-                salaoId: salaoId,
                 dias: dias,
                 horarioInicio: new Date(horarioInicio),
                 horarioFim: new Date(horarioFim)
             }
         });
 
-        // Cria as relações com Servicos
-        const servicosRelations = servicos.map(servicoId => {
-            return {
-                horarioId: horario.id,
-                servicoId: servicoId
-            };
+        // Delete existing servico relations for this horario
+        await prismaClient.horarios_Servicos.deleteMany({
+            where: {
+                horarioId: horarioId
+            }
         });
+        
+         // Create new servico relations for this horario
+         const servicosRelations = servicos.map(servicoId => ({
+            horarioId: horarioId,
+            servicoId: servicoId
+        }));
+
 
         await prismaClient.horarios_Servicos.createMany({
             data: servicosRelations
         });
 
-        // Cria as relações com Colaboradores
+        await prismaClient.horarios_Colaboradores.deleteMany({
+            where: {
+                horarioId: horarioId
+            }
+        });
+        
         const colaboradoresRelations = colaboradores.map(colaboradorId => {
             return {
-                horarioId: horario.id,
+                horarioId: horarioId,
                 colaboradorId: colaboradorId
             };
         });
@@ -58,4 +70,4 @@ class CreateHoraryService {
     }
 }
 
-export { CreateHoraryService };
+export { UpdateHoraryService };

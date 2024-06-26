@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { CreateClientController } from "./controllers/Client/CreateClientController";
+
+// middleware
 import { isAuthenticated } from "./middlewares/isAuth";
+
+// routes
+import { CreateClientController } from "./controllers/Client/CreateClientController";
 import { ListSalonByClientController } from "./controllers/Client/ListSalonByClientController";
 import { CreateCollaboratorController } from "./controllers/Collaborator/CreateCollaboratorController";
 import { CreateSalonController } from "./controllers/Salon/CreateSalonController";
@@ -18,6 +22,12 @@ import { DeleteCouponController } from "./controllers/Coupon/DeleteCouponControl
 import { ListCouponBySalonController } from "./controllers/Coupon/ListCouponBySalonController";
 import { UpdateServiceController } from "./controllers/Service/UpdateServiceController";
 import { DeleteServiceController } from "./controllers/Service/DeleteServiceController";
+import { UpdateHoraryController } from "./controllers/Horary/UpdateHoraryController";
+import { DeleteHoraryController } from "./controllers/Horary/DeleteHoraryController";
+import { ListHoraryController } from "./controllers/Horary/ListHoraryBySalonController";
+import { ListHoraryByServiceController } from "./controllers/Horary/ListHoraryByServiceController";
+import { ListCollaboratorsBySalonController } from "./controllers/Collaborator/ListCollaboratorsBySalonController";
+import { FilterSalonController } from "./controllers/Salon/FilterSalonController";
 
 
 const router = Router()
@@ -50,13 +60,21 @@ router.delete('/colaborador/:id', new DeleteCollaboratorController().handle)
 //SALAO
 // criar salao
 router.post('/salao', new CreateSalonController().handle) 
-// rota para listar todos salões no raio de filter(distancia alterável pelo usuario)
-router.get('/salao/')
+// rota para listar todos salões no raio de filter(distancia alterável pelo usuario, cidade, nome)
+router.post('/salao/filter', new FilterSalonController().handle)
 // listar detalhes do salao
 // FALTA ADICIONAR O VERIFICADOR DE HORARIO UTILIZANDO O MOMENT OU ALGO DO TIPO
 router.get('/salao/:id', new DetailSalonController().handle)
 // listar clientes do salao
 router.get('/salao/clientes/:id', new ListAllClientsController().handle)
+// listar colaboradores do salao
+router.get('/salao/colaboradores/:id', new ListCollaboratorsBySalonController().handle)
+// listar horarios do salao
+router.get('/salao/horarios/:id', new ListHoraryController().handle)
+// listar cupons do salao
+router.get('salao/cupons/:id', new ListCouponBySalonController().handle)
+// listar servicos do salao
+router.get('salao/servicos/:id', new ListServicesBySalonController().handle)
 
 //CUPOM
 // criar cupom
@@ -65,8 +83,6 @@ router.post('/cupom', new CreateCouponController().handle)
 router.put('/cupom/:id', new UpdateCouponController().handle)
 // deletar cupom
 router.delete('/cupom/:id', new DeleteCouponController().handle)
-// listar cupons do salao
-router.get('/cupom/salao/:id', new ListCouponBySalonController().handle)
 
 //SERVICO
 // criar servico
@@ -77,20 +93,18 @@ router.put('/servico/:id', new UpdateServiceController().handle)
 router.post('/servico/delete-arquivo')
 // deletar servico
 router.delete('/servico/:id', new DeleteServiceController().handle)
-// listar servicos do salao
-router.get('/servico/salao/:id', new ListServicesBySalonController().handle)
+
 
 //HORARIO/agenda
 // criar horario
 router.post('/horario', new CreateHoraryController().handle) 
-// ??? 
-router.post('/horario/colaboradores')
+// listar horarios disponiveis de colaboradores pelo id do servico
+router.post('/horario/colaboradores',new ListHoraryByServiceController().handle)
 // atualizar horario
-router.put('/horario/:id')
+router.put('/horario/:id', new UpdateHoraryController().handle)
 // deletar horario
-router.delete('/horario/:id')
-// listar horarios do salao
-router.get('/horario/salao/:id')
+router.delete('/horario/:id', new DeleteHoraryController().handle)
+
 
 //AGENDAMENTO
 // criar agendamento

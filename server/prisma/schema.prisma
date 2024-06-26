@@ -51,6 +51,8 @@ model Salao {
   email          String       @unique
   senha          String
   telefone       String?      @unique
+  enderecoRua    String
+  enderecoBairro String
   enderecoCidade String
   enderecoUf     String
   enderecoCep    String
@@ -59,8 +61,7 @@ model Salao {
   geoCoordenadas Coordenadas?
   criadoEm       DateTime     @default(now())
 
-  
-  clientes   Cliente_Salao[]
+  clientes Cliente_Salao[]
 
   colaboradores Colaborador[]
   cupons        Cupom[]
@@ -91,10 +92,9 @@ model Colaborador {
   servicos     Colaborador_Servico[]
   agendamentos Agendamento[] // 1-N
   horarios     Horarios_Colaboradores[]
-  Salao        Salao                    @relation(fields: [salaoId], references: [id])
+  Salao        Salao                    @relation(fields: [salaoId], references: [id], onDelete: Cascade)
   salaoId      String
 }
-
 
 model Servico {
   id          String   @id @default(uuid())
@@ -110,8 +110,7 @@ model Servico {
   horarios      Horarios_Servicos[]
   colaboradores Colaborador_Servico[]
   salaoId       String
-  salao         Salao                @relation(fields: [salaoId], references: [id])
-  
+  salao         Salao                 @relation(fields: [salaoId], references: [id])
 }
 
 model Cupom {
@@ -130,24 +129,24 @@ model Cupom {
 }
 
 model Agendamento {
-  id            String      @id @default(uuid())
-  data          DateTime            
-  criadoEm      DateTime    @default(now())
+  id       String   @id @default(uuid())
+  data     DateTime
+  criadoEm DateTime @default(now())
 
-  cupom         Cupom?      @relation(fields: [cupomId], references: [id])
-  cupomId       String?
+  cupom   Cupom?  @relation(fields: [cupomId], references: [id])
+  cupomId String?
 
-  salao         Salao       @relation(fields: [salaoId], references: [id])
-  salaoId       String
+  salao   Salao  @relation(fields: [salaoId], references: [id])
+  salaoId String
 
-  servico       Servico     @relation(fields: [servicoId], references: [id])
-  servicoId     String
+  servico   Servico @relation(fields: [servicoId], references: [id])
+  servicoId String
 
   colaborador   Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
   colaboradorId String
-  
-  cliente       Cliente     @relation(fields: [clienteId], references: [id])
-  clienteId     String
+
+  cliente   Cliente @relation(fields: [clienteId], references: [id])
+  clienteId String
 }
 
 model Horario {
@@ -175,33 +174,34 @@ model Colaborador_Servico {
 }
 
 model Horarios_Servicos {
-  horarioId  String
-  servicoId  String
-  horario    Horario    @relation(fields: [horarioId], references: [id])
-  servico    Servico    @relation(fields: [servicoId], references: [id], onDelete: Cascade)
+  horarioId String
+  servicoId String
+  horario   Horario @relation(fields: [horarioId], references: [id], onDelete: NoAction)
+  servico   Servico @relation(fields: [servicoId], references: [id], onDelete: Cascade)
+
   @@id([horarioId, servicoId])
 }
 
 model Horarios_Colaboradores {
   horarioId     String
   colaboradorId String
-  horario       Horario       @relation(fields: [horarioId], references: [id])
-  colaborador   Colaborador   @relation(fields: [colaboradorId], references: [id],onDelete: Cascade)
+  horario       Horario     @relation(fields: [horarioId], references: [id])
+  colaborador   Colaborador @relation(fields: [colaboradorId], references: [id], onDelete: Cascade)
+
   @@id([horarioId, colaboradorId])
 }
 
-model Cliente_Salao  {
-  id         String    @id @default(uuid())
+model Cliente_Salao {
+  id String @id @default(uuid())
 
-  salaoId String
+  salaoId   String
   clienteId String
 
-  cliente    Cliente   @relation(fields: [clienteId], references: [id])
-  salao      Salao     @relation(fields: [salaoId], references: [id])
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+  salao   Salao   @relation(fields: [salaoId], references: [id])
 
   @@unique([clienteId, salaoId])
 }
-
 
 enum Status {
   Ativo
