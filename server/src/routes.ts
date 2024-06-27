@@ -1,7 +1,9 @@
 import { Router } from "express";
+import multer from "multer";
 
 // middleware
 import { isAuthenticated } from "./middlewares/isAuth";
+import uploadConfig from './config/multer'
 
 // routes
 import { CreateClientController } from "./controllers/Client/CreateClientController";
@@ -34,11 +36,8 @@ import { SubscribeSalonController } from "./controllers/Client/SubscribeSalonCon
 
 
 const router = Router()
+const upload = multer(uploadConfig.upload("./uploads"));
 
-// -------------------- 27 ROTAS ----------------------
-// TASKS A FAZER AO FINALIZAR ROTAS:
-// 1 - CRIAR MIDDLEWARE DE AUTENTICACAO ------- OK
-// 2 - CRIAR ROTAS DE LOGIN E LOGOUT ------- 
 
 //CLIENTES
 // listar os saloes inscritos pelo cliente
@@ -54,19 +53,23 @@ router.get('/cliente/:id/favoritar',  isAuthenticated,new SubscribeSalonControll
 
 //COLABORADOR
 // criar colaborador
-router.post('/colaborador', new CreateCollaboratorController().handle)
+router.post('/colaborador', upload.single('foto'), new CreateCollaboratorController().handle)
 // atualizar colaborador
-router.put('/colaborador/:id', new UpdateCollaboratorController().handle)
+router.put('/colaborador/:id', upload.single('foto'),new UpdateCollaboratorController().handle)
 // deletar colaborador
 router.delete('/colaborador/:id', new DeleteCollaboratorController().handle)
+// deletar arquivo do colaborador
+router.post('/colaborador/delete-arquivo')
 
 //SALAO
 // criar salao
-router.post('/salao', new CreateSalonController().handle) 
+router.post('/salao',  upload.fields([{ name: 'foto', maxCount: 1 }, { name: 'capa', maxCount: 1 }]), new CreateSalonController().handle) 
 // rota para listar todos salões no raio de filter(distancia alterável pelo usuario, cidade, nome)
 router.post('/salao/filter', new FilterSalonController().handle)
 // listar detalhes do salao
 router.get('/salao/:id', new DetailSalonController().handle)
+// deletar arquivo do salao
+router.post('/salao/delete-arquivo')
 // listar clientes do salao
 router.get('/salao/clientes/:id', new ListAllClientsController().handle)
 // listar colaboradores do salao
@@ -88,7 +91,7 @@ router.delete('/cupom/:id', new DeleteCouponController().handle)
 
 //SERVICO
 // criar servico
-router.post('/servico', new CreateServiceController().handle) 
+router.post('/servico', upload.single('foto'), new CreateServiceController().handle) 
 // atualizar servico
 router.put('/servico/:id', new UpdateServiceController().handle)
 // deletar arquivo do servico
@@ -108,7 +111,7 @@ router.put('/horario/:id', new UpdateHoraryController().handle)
 router.delete('/horario/:id', new DeleteHoraryController().handle)
 
 
-//AGENDAMENTO
+//AGENDAMENTO 
 // criar agendamento
 router.post('/agendamento', new CreateScheduleController().handle )
 // filtrar agendamentos em data especificas

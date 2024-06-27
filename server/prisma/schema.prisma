@@ -46,8 +46,8 @@ model Arquivo {
 model Salao {
   id             String       @id @default(uuid())
   nome           String
-  foto           String
-  capa           String
+  foto           String?
+  capa           String?
   email          String       @unique
   senha          String
   telefone       String?      @unique

@@ -1,21 +1,25 @@
 import { Request, Response } from 'express';
-import { CreateSalonService } from '../../services/Salon/CreateSalonService';
+import { UpdateSalonService } from '../../services/Salon/UpdateSalonService';
 
 
-class CreateSalonController {
+class UpdateSalonController {
     async handle(req: Request, res: Response) {
+
+        const salaoId = req.params.id
         const {
             nome,
             email,
             senha,
             telefone,
-            enderecoPais,
             enderecoCidade,
             enderecoUf,
             enderecoCep,
             enderecoNumero,
             enderecoBairro,
-            enderecoRua } = req.body;
+            enderecoRua,
+            removerFoto,
+            removerCapa
+        } = req.body;
 
         let foto: string | undefined = undefined;
         let capa: string | undefined = undefined;
@@ -40,24 +44,24 @@ class CreateSalonController {
             coordenadas: geoCoordenadasCoordenadas.split(',').map((coord: string) => parseFloat(coord.trim()))
         };
 
+        const service = new UpdateSalonService();
 
-        const service = new CreateSalonService();
 
         const controller = await service.execute({
+            salaoId,
             nome,
-            foto,
-            capa,
             email,
             senha,
             telefone,
             enderecoCidade,
+            enderecoUf,
             enderecoCep,
             enderecoNumero,
             enderecoBairro,
             enderecoRua,
-            enderecoUf,
             geoCoordenadas,
-            enderecoPais
+            removerFoto: removerFoto === 'true',
+            removerCapa: removerCapa === 'true'
         });
 
         return res.json(controller)
@@ -65,5 +69,4 @@ class CreateSalonController {
     }
 }
 
-
-export { CreateSalonController }
+export { UpdateSalonController }

@@ -3,11 +3,11 @@ import prismaClient from "../../prisma";
 
 interface Request {
     salaoId: string;
-    foto: string
+    foto?: string
     nome: string;
-    telefone: string;
-    email: string;
-    descricao: string;
+    telefone?: string;
+    email?: string;
+    descricao?: string;
     servicos: string[]
 }
 
