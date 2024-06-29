@@ -108,7 +108,7 @@ class UpdateSalonService {
                     }
                 }
             }
-            updateData.foto = capa;
+            updateData.capa = capa;
         }
 
        

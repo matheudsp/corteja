@@ -33,7 +33,8 @@ import { FilterSalonController } from "./controllers/Salon/FilterSalonController
 import { ListScheduleByDisponibilityController } from "./controllers/Schedule/ListScheduleByDisponibilityController";
 import { FilterScheduleController } from "./controllers/Schedule/FilterScheduleController";
 import { SubscribeSalonController } from "./controllers/Client/SubscribeSalonController";
-
+import { DeleteSalonController } from "./controllers/Salon/DeleteSalonController";
+import { UpdateSalonController } from "./controllers/Salon/UpdateSalonController";
 
 const router = Router()
 const upload = multer(uploadConfig.upload("./uploads"));
@@ -58,18 +59,20 @@ router.post('/colaborador', upload.single('foto'), new CreateCollaboratorControl
 router.put('/colaborador/:id', upload.single('foto'),new UpdateCollaboratorController().handle)
 // deletar colaborador
 router.delete('/colaborador/:id', new DeleteCollaboratorController().handle)
-// deletar arquivo do colaborador
-router.post('/colaborador/delete-arquivo')
+// // deletar arquivo do colaborador
+// router.post('/colaborador/delete-arquivo')
 
 //SALAO
 // criar salao
 router.post('/salao',  upload.fields([{ name: 'foto', maxCount: 1 }, { name: 'capa', maxCount: 1 }]), new CreateSalonController().handle) 
+// deletar salao
+router.delete('/salao/:id', new DeleteSalonController().handle)
+// atualizar salao
+router.put('/salao/:id', new UpdateSalonController().handle)
 // rota para listar todos salões no raio de filter(distancia alterável pelo usuario, cidade, nome)
 router.post('/salao/filter', new FilterSalonController().handle)
 // listar detalhes do salao
 router.get('/salao/:id', new DetailSalonController().handle)
-// deletar arquivo do salao
-router.post('/salao/delete-arquivo')
 // listar clientes do salao
 router.get('/salao/clientes/:id', new ListAllClientsController().handle)
 // listar colaboradores do salao
@@ -80,6 +83,8 @@ router.get('/salao/horarios/:id', new ListHoraryController().handle)
 router.get('salao/cupons/:id', new ListCouponBySalonController().handle)
 // listar servicos do salao
 router.get('salao/servicos/:id', new ListServicesBySalonController().handle)
+// // deletar arquivo do salao
+// router.post('/salao/delete-arquivo')
 
 //CUPOM
 // criar cupom
@@ -94,10 +99,10 @@ router.delete('/cupom/:id', new DeleteCouponController().handle)
 router.post('/servico', upload.single('foto'), new CreateServiceController().handle) 
 // atualizar servico
 router.put('/servico/:id', new UpdateServiceController().handle)
-// deletar arquivo do servico
-router.post('/servico/delete-arquivo')
 // deletar servico
 router.delete('/servico/:id', new DeleteServiceController().handle)
+// // deletar arquivo do servico
+// router.post('/servico/delete-arquivo')
 
 
 //HORARIO/agenda
