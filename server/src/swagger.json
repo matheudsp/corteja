@@ -1,0 +1,119 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de agendamento para saloes",
+        "description": "Manipulacao de horarios e agendamentos",
+        "contact": {
+            "email": "mdsp.personal@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3333/v1",
+            "description": "API de dev"
+        }
+    ],
+    "paths":{
+        "/agendamento":{
+            "post": {
+                "summary":"Cadastro de Agendamento",
+                "description":"Rota para marcar horário",
+                "tags":["Agendamento"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/Agendamento"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/agendamento/filter":{
+            "post": {
+                "summary":"Filtro de Agendamentos",
+                "description":"Rota para filtrar agendamentos em data especificas",
+                "tags":["AgendamentoFilter"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/AgendamentoFilter"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/agendamento/dias-disponiveis":{
+            "post": {
+                "summary":"Verificar Vagas para Agendamento",
+                "description":"Rota para verificar agendamentos em data especificas",
+                "tags":["AgendamentoDisponivel"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/AgendamentoFilter"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components":{
+        "schemas":{
+            "Agendamento":{
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type":"string"
+                    },
+                    "cupomId": {
+                        "type":"string"
+                    },
+                    "salaoId": {
+                        "type":"string"
+                    },
+                    "servicoId": {
+                        "type":"string"
+                    },
+                    "colaboradorId": {
+                        "type":"string"
+                    },
+                    "clienteId": {
+                        "type":"string"
+                    }
+                }
+            },
+            "AgendamentoFilter":{
+                "type": "object",
+                "properties": {
+                    "salaoId": {
+                        "type":"string"
+                    },
+                    "periodo":{
+                        "type":"object"
+                    }
+                }
+            },
+            "AgendamentoDisponivel":{
+                "type": "object",
+                "properties": {
+                    "salaoId": {
+                        "type":"string"
+                    },
+                    "servicoId":{
+                        "type":"string"
+                    },
+                    "data":{
+                        "type":"string"
+                    }
+                }
+            }
+        }
+    }
+}

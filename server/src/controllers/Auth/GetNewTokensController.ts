@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { GetNewTokensService } from "../../services/Auth/getNewTokensService";
+import { GetNewTokensService } from "../../services/Auth/GetNewTokensService";
 
 class GetNewTokensController {
     async handle(req: Request, res: Response) {
