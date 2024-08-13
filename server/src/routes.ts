@@ -6,7 +6,7 @@ import { isAuthenticated } from "./middlewares/isAuth";
 import uploadConfig from './config/multer'
 
 // routes
-import { CreateClientController } from "./controllers/Client/CreateClientController";
+import { CreateClientController } from "./controllers/Auth/CreateClientController";
 import { ListSalonByClientController } from "./controllers/Client/ListSalonByClientController";
 import { CreateCollaboratorController } from "./controllers/Collaborator/CreateCollaboratorController";
 import { CreateSalonController } from "./controllers/Salon/CreateSalonController";
@@ -35,19 +35,25 @@ import { FilterScheduleController } from "./controllers/Schedule/FilterScheduleC
 import { SubscribeSalonController } from "./controllers/Client/SubscribeSalonController";
 import { DeleteSalonController } from "./controllers/Salon/DeleteSalonController";
 import { UpdateSalonController } from "./controllers/Salon/UpdateSalonController";
+import { AuthUserController } from "./controllers/Auth/AuthClientController";
+import { GetNewTokensController } from "./controllers/Auth/GetNewTokensController";
 
 const router = Router()
 const upload = multer(uploadConfig.upload("./uploads"));
 
 
+//AUTH
+// criar cliente
+router.post('/auth/register', new CreateClientController().handle)
+//login
+router.post('/auth/login', new AuthUserController().handle)
+//get new tokens
+router.post('/auth/login/access-token', new GetNewTokensController().handle)
+
+
 //CLIENTES
 // listar os saloes inscritos pelo cliente
 router.get('/cliente/salao', isAuthenticated, new ListSalonByClientController().handle)
-// criar cliente
-router.post('/cliente', new CreateClientController().handle)
-//login
-
-//logout
 
 // rota para inscrever o cliente ao salao
 router.get('/cliente/:id/favoritar',  isAuthenticated,new SubscribeSalonController().handle)
