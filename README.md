@@ -30,3 +30,59 @@ A documentação da API é gerada automaticamente pelo Swagger e pode ser acessa
 1. Clone o repositório:
    ```bash
    git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   
+## Rotas
+
+### Autenticação
+- **POST /auth/register**: Registra um novo cliente.
+- **POST /auth/login**: Realiza login de um cliente.
+- **POST /auth/login/access-token**: Renova o token de acesso.
+
+### Clientes
+- **GET /cliente/salao**: Lista os salões inscritos pelo cliente.
+- **GET /cliente/:id/favoritar**: Inscreve o cliente em um salão.
+
+### Colaboradores
+- **POST /colaborador**: Cria um novo colaborador (com upload de foto).
+- **PUT /colaborador/:id**: Atualiza um colaborador (com upload de foto).
+- **DELETE /colaborador/:id**: Remove um colaborador.
+
+### Salões
+- **POST /salao**: Cria um novo salão (com upload de foto e capa).
+- **DELETE /salao/:id**: Remove um salão.
+- **PUT /salao/:id**: Atualiza os dados de um salão.
+- **POST /salao/filter**: Filtra salões por distância, cidade, ou nome.
+- **GET /salao/:id**: Detalha as informações de um salão.
+- **GET /salao/clientes/:id**: Lista os clientes inscritos em um salão.
+- **GET /salao/colaboradores/:id**: Lista os colaboradores de um salão.
+- **GET /salao/horarios/:id**: Lista os horários disponíveis de um salão.
+- **GET /salao/cupons/:id**: Lista os cupons de um salão.
+- **GET /salao/servicos/:id**: Lista os serviços oferecidos por um salão.
+
+### Cupons
+- **POST /cupom**: Cria um novo cupom.
+- **PUT /cupom/:id**: Atualiza um cupom existente.
+- **DELETE /cupom/:id**: Remove um cupom.
+
+### Serviços
+- **POST /servico**: Cria um novo serviço (com upload de foto).
+- **PUT /servico/:id**: Atualiza os dados de um serviço.
+- **DELETE /servico/:id**: Remove um serviço.
+
+### Horários/Agenda
+- **POST /horario**: Cria um novo horário.
+- **POST /horario/colaboradores**: Lista os horários disponíveis de colaboradores para um serviço específico.
+- **PUT /horario/:id**: Atualiza um horário existente.
+- **DELETE /horario/:id**: Remove um horário.
+
+### Agendamentos
+- **POST /agendamento**: Cria um novo agendamento.
+- **POST /agendamento/filter**: Filtra agendamentos por data.
+- **POST /agendamento/dias-disponiveis**: Verifica a disponibilidade de horários.
+
+## Tratamento de Erros
+
+A API inclui um middleware de tratamento de erros para capturar exceções e retornar respostas adequadas.
+
+- **400**: Erro de validação ou solicitação inválida.
+- **500**: Erro interno do servidor.
