@@ -1,0 +1,228 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  email    String @unique
+  password String
+
+  name       String
+  avatarPath String? @default("/uploads/users/default-avatar.png") @map("avatar_path")
+
+  phone  String @default("")
+  status Status @default(Enabled)
+
+  favorites       Salon[]
+  appointments Appointment[] // 1-N
+
+  @@map("customer")
+}
+
+model Salon {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name           String   @unique
+  email          String   @unique
+  password       String
+  image          String   @default("/uploads/saloons/default-logo.png") @map("logo_path")
+  status         Status   @default(Enabled)
+  
+  phone          String   @default("")
+  address        Address?
+  geoCoordinates Float[]
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+  customerId String?  @map("customer_id")
+
+  employee         Employee[]
+  coupons          Coupon[]
+  salonServices    SalonService[]
+  servicesRendered ServiceRendered[] // 1-N
+  appointments     Appointment[] // 1-N
+
+  @@map("salon")
+}
+
+model Address {
+  id      String @id @default(uuid())
+  salonId String @unique
+
+  street   String
+  district String
+  city     String
+  state    String
+  zipcode  String
+  number   String
+  country  String @default("Brasil")
+
+  salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  @@map("address")
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  salonId   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name       String
+  avatarPath String? @default("/uploads/employees/default-avatar.png") @map("avatar_path")
+  status     Status  @default(Enabled)
+
+  services         Employee_SalonService[]
+  appointments     Appointment[] // 1-N
+  renderedServices ServiceRendered_Employees[]
+
+  salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  @@map("employee")
+}
+
+model SalonService {
+  id        String   @id @default(uuid())
+  salonId   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  image      String? @default("/uploads/salon-services/default-image.png") @map("image_path")
+  name       String
+  price      Float
+  duration   Int
+  recurrence Int?
+  status     Status  @default(Enabled)
+
+  appointments     Appointment[]
+  renderedServices ServiceRendered_SalonService[]
+  employees        Employee_SalonService[]
+
+  salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  @@map("salonService")
+}
+
+model Coupon {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  price         Float
+  dateStart     DateTime?
+  dateEnd       DateTime?
+  code          String
+  quantityUse   Int
+  remainingUses Int
+  status        Status        @default(Enabled)
+  salonId       String
+  salon         Salon         @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  appointments  Appointment[] // 1-N
+
+  @@map("coupon")
+}
+
+model Appointment {
+  id         String   @id @default(uuid())
+  customerId String
+  employeeId String
+  serviceId  String
+  salonId    String
+  couponId   String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  date DateTime
+
+  coupon       Coupon?      @relation(fields: [couponId], references: [id])
+  salon        Salon        @relation(fields: [salonId], references: [id], onDelete: NoAction)
+  salonService SalonService @relation(fields: [serviceId], references: [id])
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id])
+
+  @@map("appointment")
+}
+
+model ServiceRendered {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  days      Int[] // Dias da semana para agendamento, domingo - 0 ... sabado - 6
+  hourStart DateTime
+  hourEnd   DateTime
+
+  salon     Salon                          @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  salonId   String
+  services  ServiceRendered_SalonService[]
+  employees ServiceRendered_Employees[]
+
+  @@map("serviceRendered")
+}
+
+// ------------- RELATIONS ------------------
+
+model Employee_SalonService {
+  employeeId     String
+  salonServiceId String
+
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  salonService SalonService @relation(fields: [salonServiceId], references: [id], onDelete: Cascade)
+
+  @@id([employeeId, salonServiceId])
+}
+
+model ServiceRendered_SalonService {
+  serviceRenderedId String
+  salonServiceId    String
+  serviceRendered   ServiceRendered @relation(fields: [serviceRenderedId], references: [id], onDelete: NoAction)
+  salonService      SalonService    @relation(fields: [salonServiceId], references: [id], onDelete: Cascade)
+
+  @@id([salonServiceId, serviceRenderedId])
+}
+
+model ServiceRendered_Employees {
+  serviceRenderedId String
+  employeeId        String
+  serviceRendered   ServiceRendered @relation(fields: [serviceRenderedId], references: [id])
+  employee          Employee        @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@id([serviceRenderedId, employeeId])
+}
+
+// model Customer_Salon {
+//   id String @id @default(uuid())
+
+//   salonId    String
+//   customerId String
+
+//   customer Customer @relation(fields: [customerId], references: [id])
+//   salon    Salon    @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+//   @@unique([customerId, salonId])
+// }
+
+enum Status {
+  Enabled
+  Disabled
+}
+
+enum Type {
+  Service
+  Salon
+}
