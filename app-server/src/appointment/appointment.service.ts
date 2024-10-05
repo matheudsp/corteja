@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import { SLOT_DURATION, hourToMinutes, mergeDateTime, sliceMinutes, splitByValue } from "../utils/util";
 import _ from 'lodash';
 import { CreateAppoitmentDto } from './dto/appointment.dto';
+import { AppointmentVerifyDto } from './dto/appointment-verify';
+import moment from 'moment';
 
 @Injectable()
 export class AppointmentService {
@@ -63,7 +65,7 @@ export class AppointmentService {
     async create(dto: CreateAppoitmentDto) {
         const {
             couponId,
-            customerId, 
+            customerId,
             date,
             employeeId,
             salonId,
@@ -71,7 +73,7 @@ export class AppointmentService {
         } = dto
 
         const appointment = await this.prisma.appointment.create({
-            data:{
+            data: {
                 couponId,
                 customerId,
                 employeeId,
@@ -86,35 +88,35 @@ export class AppointmentService {
 
     async update() { }
 
-    async delete(id:string) { 
+    async delete(id: string) {
         return await this.prisma.appointment.delete({
-            where:{id}
+            where: { id }
         })
     }
+    async getDays(dto: AppointmentVerifyDto) {
+       const {date, salonServiceId, salonId } = dto
+        let schedule = [];
+        let lastDay = dayjs(date);
+        const servico = await this.prisma.salonService.findUnique({
+            where: { id: salonServiceId },
+            select: { duration: true }
+        });
 
-    async verify(salonId: string, data: string, salonServiceId: string) {
-        const salonService = await this.prisma.salonService.findFirst({
-            where: {
-                id: salonServiceId
-            },
-            select: {
-                duration: true
-            }
-        })
-
-        if (!salonService || !salonService.duration) {
-            throw new Error(`O serviço com ID ${salonServiceId} não foi encontrado ou não possui duração definida`)
+        // Verificação de erro no serviço
+        if (!servico) {
+            throw new Error('Serviço não encontrado.');
         }
 
-        const durationString = `${Math.floor(salonService.duration / 60).toString().padStart(2, '0')}:${(salonService.duration % 60).toString().padEnd(2, '0')}`;
-        const salonServiceDuration = hourToMinutes(durationString);
-        const salonServiceDurationSlots = sliceMinutes(dayjs(salonService.duration).toDate(), dayjs(salonService.duration).add(salonServiceDuration, 'minutes').toDate(), SLOT_DURATION, false).length;
-
-        let schedule: { [key: string]: any }[] = [];
-        let lastDay = dayjs(data);
+        const servicoDuracao = servico.duration;
+        const servicoDuracaoSlots = sliceMinutes(
+            dayjs().startOf('day'),
+            dayjs().startOf('day').add(servicoDuracao, 'minutes'),
+            SLOT_DURATION,
+            false
+        ).length;
 
         for (let i = 0; i <= 365 && schedule.length <= 7; i++) {
-            const servicesRendered = await this.prisma.serviceRendered.findMany({
+            const horarios = await this.prisma.serviceRendered.findMany({
                 where: {
                     salonId,
                     days: {
@@ -122,7 +124,7 @@ export class AppointmentService {
                     },
                     services: {
                         some: {
-                            salonServiceId
+                            salonServiceId: salonServiceId
                         }
                     }
                 },
@@ -135,30 +137,30 @@ export class AppointmentService {
                 }
             });
 
-            if (servicesRendered.length > 0) {
-                let allScheduleDay: { [key: string]: string[] } = {};
+            if (horarios.length > 0) {
+                let todosHorariosDia: { [key: string]: string[] } = {};
 
-                for (let schedule of servicesRendered) {
-                    for (let employee of schedule.employees) {
-                        if (!allScheduleDay[employee.employeeId]) {
-                            allScheduleDay[employee.employeeId] = [];
+                for (let horario of horarios) {
+                    for (let colaborador of horario.employees) {
+                        if (!todosHorariosDia[colaborador.employeeId]) {
+                            todosHorariosDia[colaborador.employeeId] = [];
                         }
 
-                        allScheduleDay[employee.employeeId] = [
-                            ...allScheduleDay[employee.employeeId],
+                        todosHorariosDia[colaborador.employeeId] = [
+                            ...todosHorariosDia[colaborador.employeeId],
                             ...sliceMinutes(
-                                mergeDateTime(lastDay, schedule.hourStart),
-                                mergeDateTime(lastDay, schedule.hourEnd),
+                                mergeDateTime(lastDay, horario.hourStart),
+                                mergeDateTime(lastDay, horario.hourEnd),
                                 SLOT_DURATION
                             )
                         ];
                     }
                 }
 
-                for (let employeeKey of Object.keys(allScheduleDay)) {
-                    const appointments = await this.prisma.appointment.findMany({
+                for (let colaboradorKey of Object.keys(todosHorariosDia)) {
+                    const agendamentos = await this.prisma.appointment.findMany({
                         where: {
-                            employeeId: employeeKey,
+                            employeeId: colaboradorKey,
                             date: {
                                 gte: dayjs(lastDay).startOf('day').toISOString(),
                                 lte: dayjs(lastDay).endOf('day').toISOString()
@@ -169,61 +171,64 @@ export class AppointmentService {
                         }
                     });
 
-                    let busySchedules = appointments.flatMap(a => {
-                        const start = dayjs(a.date);
-                        const end = start.add(salonServiceDuration, 'minutes');
-                        return sliceMinutes(start, end, SLOT_DURATION, false);
+                    let horariosOcupado = agendamentos.flatMap(a => {
+                        const inicio = dayjs(a.date);
+                        const fim = inicio.add(servicoDuracao, 'minutes');
+                        return sliceMinutes(inicio, fim, SLOT_DURATION, false);
                     });
 
-                    let freeSchedules = splitByValue(
-                        _.uniq(allScheduleDay[employeeKey]),
+                    let horariosLivres = splitByValue(
+                        _.uniq(todosHorariosDia[colaboradorKey]),
                         '-'
                     );
 
-                    freeSchedules = freeSchedules
-                        .filter(slot => slot.length >= salonServiceDurationSlots)
-                        .map(slot => slot.filter((_, index) => slot.length - index >= salonServiceDurationSlots));
+                    horariosLivres = horariosLivres
+                        .filter(slot => slot.length >= servicoDuracaoSlots)
+                        .map(slot => slot.filter((_, index) => slot.length - index >= servicoDuracaoSlots));
 
-                    freeSchedules = _.chunk(freeSchedules.flat(), 2);
+                    horariosLivres = _.chunk(horariosLivres.flat(), 2);
 
-                    if (freeSchedules.length === 0) {
-                        delete allScheduleDay[employeeKey];
+                    if (horariosLivres.length === 0) {
+                        delete todosHorariosDia[colaboradorKey];
                     } else {
-                        allScheduleDay[employeeKey] = freeSchedules.flat()
+                        todosHorariosDia[colaboradorKey] = horariosLivres.flat();
                     }
-
-                    const totalEmployees = Object.keys(allScheduleDay).length;
-
-                    if (totalEmployees > 0) {
-                        const employees = await this.prisma.employee.findMany({
-                            where: {
-                                id: { in: _.uniq(Object.keys(allScheduleDay)) }
-                            },
-                            select: {
-                                name: true,
-                                avatarPath: true
-                            }
-                        });
-
-                        const formattedEmployees = employees.map(e => ({
-                            name: e.name.split('')[0],
-                            avatar: e.avatarPath
-                        }));
-
-                        schedule.push({
-                            [dayjs(lastDay).format('YYYY-MM-DD')]: {
-                                employees: formattedEmployees,
-                                servicesRendered: allScheduleDay
-                            }
-                        });
-                    }
-
-
                 }
 
+                const totalColaboradores = Object.keys(todosHorariosDia).length;
+
+                if (totalColaboradores > 0) {
+                    const colaboradores = await this.prisma.employee.findMany({
+                        where: {
+                            id: { in: _.uniq(Object.keys(todosHorariosDia)) }
+                        },
+                        select: {
+                            name: true,
+                            avatarPath: true,
+                            id:true
+                        }
+                    });
+
+                    const formattedColaboradores = colaboradores.map(c => ({
+                        id: c.id,
+                        name: c.name.split(' ')[0],
+                        avatarPath: c.avatarPath,
+                        times: todosHorariosDia[c.id] || []  // Inclui os horários de cada colaborador
+                    }));
+
+                    schedule.push({
+                        [dayjs(lastDay).format('YYYY-MM-DD')]: {
+                            employees: formattedColaboradores
+                        }
+                    });
+                }
             }
+
             lastDay = dayjs(lastDay).add(1, 'day');
         }
-        return schedule
+
+        return { schedule };
     }
+
+
 }

@@ -12,6 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AppointmentService } from './appointment.service';
 import { CreateAppoitmentDto } from './dto/appointment.dto';
 import { AppointmentFilterDto } from './dto/appointment-filter.dto';
+import { AppointmentVerifyDto } from './dto/appointment-verify';
 
 @ApiTags('appointments')
 @Controller('appointments')
@@ -35,8 +36,8 @@ export class AppointmentController {
 	@UsePipes(new ValidationPipe())
 	@HttpCode(200)
 	@Post('/verify')
-	async verifyDisponibility(@Body() salonId: string, data: string, salonServiceId: string){
-		return this.appointmentService.verify(salonId, data, salonServiceId)
+	async verifyDisponibility(@Body() dto: AppointmentVerifyDto){
+		return this.appointmentService.getDays(dto)
 	}
 
 	@HttpCode(200)
