@@ -7,7 +7,16 @@ export type TypeRootStackParamList = {
 	Search: undefined
 	Explorer: undefined
 	Profile: undefined
-	Appointments: undefined
+	AppointmentHistory:undefined
+	Appointment: {
+		salonServiceId: string,
+		salonId:string,
+		salonName: string,
+		salonServiceName: string,
+		salonAvatar: string,
+		salonServicePrice: number,
+		salonServiceDuration: number
+	}
 	Salon: {
 		id:string
 	}

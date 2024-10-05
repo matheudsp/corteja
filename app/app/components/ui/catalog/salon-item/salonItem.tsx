@@ -20,11 +20,11 @@ const SalonItem: FC<ISalonItem> = ({ salon }) => {
 	const { navigate } = useTypedNavigation()
 
 	return (
-		<TouchableOpacity
+		<Pressable
 			onPress={() => navigate('Salon', { id: salon.id })}
 			className=' w-full flex-row mb-3.5'>
 			<View
-				className='bg-gray-100 w-32 h-32 rounded-xl relative overflow-hidden flex items-center justify-center'>
+				className='border-2 w-32 h-32 rounded-xl relative overflow-hidden flex items-center justify-center'>
 				<Image
 					// source={getMediaSource(salon.image)}
 					source={{ uri: `${salon.image}` }}
@@ -34,7 +34,7 @@ const SalonItem: FC<ISalonItem> = ({ salon }) => {
 				/>
 			</View>
 			<SalonInfo salon={salon} />
-		</TouchableOpacity>
+		</Pressable>
 	)
 }
 

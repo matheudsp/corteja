@@ -5,7 +5,7 @@ import Layout from '@/components/layout/Layout'
 
 import Banner from './Banner/Banner'
 import Saloons from './Saloons/Saloons'
-import Header from './Header/Header'
+import Header from './HomeHeader/HomeHeader'
 
 
 const Home: FC = () => {
@@ -14,7 +14,7 @@ const Home: FC = () => {
 			<Header />
 			<Banner />
 			<Saloons />
-
+			
 		</Layout>
 	)
 }

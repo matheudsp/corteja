@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { SalonService } from '@/services/salon.service'
 
-import { IFilterRequest, IFilterResponse } from '@/types/filter.interface'
 
 
 

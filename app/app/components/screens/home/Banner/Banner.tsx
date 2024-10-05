@@ -7,7 +7,7 @@ const Banner: FC = () => {
 	const { navigate } = useTypedNavigation()
 
 	return (
-		<View className='mt-4 w-full bg-[#475baa] px-5 py-5 rounded-2xl justify-between flex-row'>
+		<View className='mt-4 w-full items-center bg-[#475baa] px-5 py-5 rounded-2xl justify-between flex-row'>
 			<View>
 				<Text className='font-medium w-56 text-white text-xl'>
 					A melhor escolha para você
@@ -21,6 +21,12 @@ const Banner: FC = () => {
 						Agende agora
 					</Text>
 				</Pressable>
+			</View>
+			<View>
+				<Image
+					source={require('../../../../assets/logo.png')}
+					className="w-28 h-28"
+				/>
 			</View>
 		</View>
 	)

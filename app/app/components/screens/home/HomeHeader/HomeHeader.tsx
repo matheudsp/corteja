@@ -14,7 +14,7 @@ dayjs.locale('pt-br');
 const formattedDate = dayjs().format('dddd, D MMM YYYY'); 
 
 
-const Header: FC = () => {
+const HomeHeader: FC = () => {
 	const { navigate } = useTypedNavigation()
 
 	const { profile } = useProfile()
@@ -42,4 +42,4 @@ const Header: FC = () => {
 	)
 }
 
-export default Header
+export default HomeHeader

@@ -32,8 +32,6 @@ const queryClient = new QueryClient({
 // 		console.log('Failed to clear the async storage.');
 // 	}
 // };
-
-// // Викликайте цю функцію в потрібному місці вашого додатку
 // clearStorage();
 
 export default function App() {

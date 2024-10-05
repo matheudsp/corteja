@@ -11,7 +11,7 @@ export const menuItems: IMenuItem[] = [
 	},
 	{
 		iconName: 'calendar',
-		path: 'Appointments'
+		path: 'AppointmentHistory'
 	},
 	{
 		iconName: 'user',

@@ -32,6 +32,8 @@ const Catalog: FC<ICatalog> = ({ title, saloons, filterButton }) => {
 			) : (
 				<Text className='mt-2'>Salões não encontrados</Text>
 			)}
+
+			
 		</View>
 	)
 }

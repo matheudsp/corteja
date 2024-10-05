@@ -21,6 +21,8 @@ const Navigation: FC = () => {
 
 	const navRef = useNavigationContainerRef()
 
+	const hiddenRoutes = ['Salon', 'Appointment']
+
 	useEffect(() => {
 		setCurrentRoute(navRef.getCurrentRoute()?.name)
 
@@ -35,12 +37,14 @@ const Navigation: FC = () => {
 
 	useCheckAuth(currentRoute)
 
+	const shouldShowBottomMenu = currentRoute && !hiddenRoutes.includes(currentRoute)
+
 	return (
 		<>
 			<NavigationContainer ref={navRef}>
 				<PrivateNavigator />
 			</NavigationContainer>
-			{user && currentRoute && (
+			{user && shouldShowBottomMenu && (
 				<BottomMenu nav={navRef.navigate} currentRoute={currentRoute} />
 			)}
 		</>

@@ -12,7 +12,7 @@ const Button: FC<PropsWithChildren<IButton>> = ({
 	return (
 		<Pressable
 			className={cn(
-				'self-center mt-3.5 bg-[#475baa] w-full py-3 font-light rounded-lg',
+				'self-center bg-[#475baa] w-full py-3 font-light rounded-lg',
 				className
 			)}
 			{...rest}

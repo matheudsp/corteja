@@ -10,6 +10,7 @@ interface ISalonButton extends PressableProps {
 	iconSize?: number
 	color?: string
 	className?: string
+	action?: () => void
 }
 
 const SalonButton: FC<PropsWithChildren<ISalonButton>> = ({

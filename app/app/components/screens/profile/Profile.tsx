@@ -19,12 +19,17 @@ const Profile: FC = () => {
 
 	return (
 		<Layout>
-			<View className='justify-between mb-6 flex-row items-center'>
-				<Heading >Meu Perfil</Heading>
-				<Text>Logo CorteJá</Text>
+			<View className='justify-between flex-row items-center'>
+				<Heading className=''>Meu Perfil</Heading>
+
+				<Image
+					source={require('../../../assets/logo.png')}
+					className="w-14 h-14"
+				/>
+
 			</View>
 
-			<View className=' items-start w-full h-28 justify-evenly flex-row rounded-3xl bg-blue-100'>
+			<View className=' items-start mt-2 w-full h-28 justify-evenly flex-row rounded-3xl bg-blue-100'>
 				<View className='w-2/6 items-center h-full '>
 					<Image
 						source={{ uri: profile?.avatarPath }}

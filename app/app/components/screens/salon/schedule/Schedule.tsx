@@ -54,7 +54,9 @@ const Schedule: FC<ISalonComponent> = ({ salon }) => {
                         );
                     })
                 ) : (
-                    <Text className='text-gray-500'>Não há agendamentos para a data selecionada.</Text>
+                    <View className='items-center justify-center h-60'>
+                        <Text className='text-gray-500'>Não há agendamentos para a data selecionada.</Text>
+                    </View>
                 )}
             </ScrollView >
         </View >
