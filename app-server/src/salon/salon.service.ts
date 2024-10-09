@@ -89,7 +89,9 @@ export class SalonService {
                 return null; //if dont receive coordinates return null 
             }).filter(salon => salon && salon.distance <= distanceLimit);
 
-            return salonsDistance;
+            const orderByAsc = salonsDistance.sort((a,b) => a.distance - b.distance);
+            
+            return orderByAsc
         }
 
         return saloons;
