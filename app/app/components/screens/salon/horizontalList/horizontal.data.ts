@@ -1,20 +1,21 @@
+import { Calendar, Info, Scissors, TicketPercent } from 'lucide-react-native'
 import { IHorizontalItem } from './horizontal.interface'
 
 export const horizontalItems: IHorizontalItem[] = [
 	{
-		iconName: 'info',
+		icon: Info,
 		title: 'Sobre'
 	},
 	{
-		iconName: 'scissors',
+		icon: Scissors,
 		title: 'Serviços'
 	},
 	{
-		iconName: 'calendar',
+		icon: Calendar,
 		title: 'Agendamentos'
 	},
 	{
-		iconName:'dollar-sign',
+		icon: TicketPercent,
 		title:'Cupons'
 	}
 ]

@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native'
 
 import Heading from '../Heading'
 
@@ -7,11 +7,17 @@ import { ICatalog } from './catalog.interface'
 import SalonItem from './salon-item/salonItem'
 import Icon from '../icon/Icon'
 
-const Catalog: FC<ICatalog> = ({ title, saloons, filterButton }) => {
+import { Text } from 'components/ui/text'
+import { HStack } from 'components/ui/hstack'
+import { VStack } from 'components/ui/vstack'
+import SkeletonSalon from './salon-item/SkeletonSalon'
+
+
+const Catalog: FC<ICatalog> = ({ title, saloons, filterButton, isLoading }) => {
 	return (
-		<View className='mb-16 mt-4'>
-			<View className='flex-row py-2 justify-between flex items-center'>
-				{title && <Heading>{title}</Heading>}
+		<VStack space="md" className='mb-16 mt-4'>
+			<HStack className='py-2 px-4 justify-between flex items-center'>
+				{title && <Heading className='uppercase text-xl font-medium text-typography-900'>{title}</Heading>}
 				{filterButton &&
 					<TouchableOpacity className='bg-[#475baa] p-2 rounded-full'>
 						<Icon
@@ -21,20 +27,31 @@ const Catalog: FC<ICatalog> = ({ title, saloons, filterButton }) => {
 						/>
 					</TouchableOpacity>}
 
-			</View>
+			</HStack>
 
-			{saloons?.length ? (
-				<View className='flex-row flex-wrap justify-between mt-4'>
+			{isLoading ? (
+				<SkeletonSalon />
+			)
+				:
+				(saloons?.length ? (
+			<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+				<HStack
+					space='lg'
+					className='px-4'>
 					{saloons.map(salon => (
 						<SalonItem key={salon.id} salon={salon} />
 					))}
-				</View>
+				</HStack>
+			</ScrollView>
 			) : (
-				<Text className='mt-2'>Salões não encontrados</Text>
-			)}
+			<Text className='mt-2 text-typography-900 text-lg font-medium'>Salões não encontrados</Text>
+				))}
 
-			
-		</View>
+
+
+
+
+		</VStack>
 	)
 }
 

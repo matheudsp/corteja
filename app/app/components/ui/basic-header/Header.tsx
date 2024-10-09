@@ -1,9 +1,12 @@
 
 import { FC } from 'react'
-import { Pressable, Text, View } from 'react-native'
-import Icon from '../icon/Icon'
-import { useTypedNavigation } from '@/hooks/useTypedNavigation'
+import { Text } from 'components/ui/text'
+import { Pressable } from 'components/ui/pressable'
+import { Box } from 'components/ui/box'
 import { useNavigation } from '@react-navigation/native'
+import { Icon } from 'components/ui/icon'
+import { ArrowLeft } from 'lucide-react-native'
+import { HStack } from 'components/ui/hstack'
 
 
 interface HeaderProps {
@@ -16,14 +19,18 @@ const BasicHeader: FC<HeaderProps> = ({ title }) => {
 
 	return (
 
-		<View className='flex-row items-center h-16 w-full'>
-			<Pressable onPress={(() => {navigation.goBack()})} className='w-[20%] h-full justify-center items-center'>
-				<Icon iconName='arrow-left' iconSize={26} iconColor='#111827' />
+		<HStack className='items-center h-16 w-full'>
+			<Pressable onPress={(() => { navigation.goBack() })} className='w-[20%] h-full justify-center rounded-full items-center'>
+				<Icon
+					as={ArrowLeft}
+					size="xl"
+					className={'text-typography-900'}
+				/>
 			</Pressable>
-			<View className='w-[80%]'>
-				<Text className='text-xl font-medium'> {title}</Text>
-			</View>
-		</View>
+			<Box className='w-[80%]'>
+				<Text className='text-xl font-medium text-typography-900'> {title}</Text>
+			</Box>
+		</HStack>
 
 	)
 }

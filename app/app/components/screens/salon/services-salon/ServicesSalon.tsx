@@ -1,49 +1,58 @@
 import { FC } from 'react'
-import { Text, View, Image } from 'react-native'
 
+
+import { Image } from 'react-native';
+import { HStack } from 'components/ui/hstack';
+
+import { Text } from 'components/ui/text'
+
+import { Box } from 'components/ui/box'
 
 
 import { ISalonComponent } from '../salon-page.interface'
-import SalonButton from '../SalonButton'
+
 import { Feather } from '@expo/vector-icons'
 import { useTypedNavigation } from '@/hooks/useTypedNavigation'
+import { VStack } from 'components/ui/vstack';
+import { Button } from 'components/ui/button';
 
 const ServicesSalon: FC<ISalonComponent> = ({ salon }) => {
 	const { navigate } = useTypedNavigation()
 	return (
 
-		<View className='my-4'>
+		<Box className='my-4'>
 			<Text className=' text-xl font-medium'>Serviços</Text>
 			{salon.employee?.length ? (
-				<View className='flex-col space-y-4 mt-4'>
+				<VStack space='md' className='mt-4'>
 					{salon.salonServices.map((service, index) => {
 						return (
-							<View key={index} className='flex-row '>
+							<HStack key={index} className='justify-between' >
 
-								<View className='w-24'>
+								<Box className='w-24'>
 									<Image
-										source={{ uri: service?.image }}
 										width={96}
 										height={96}
+										alt='service image'
+										source={{ uri: service?.image }}
 										className=' rounded-xl my-auto'
 									/>
-								</View>
+								</Box>
 
-								<View className='items-center ml-2 w-64 justify-between flex-row'>
-									<View className='space-y-1 w-full'>
+								<HStack className='items-center  w-72 justify-between '>
+									<VStack space='xs' className=' w-full'>
 										<Text className='text-lg'>{service.name}</Text>
-										<View className='flex-row  items-center justify-evenly'>
-											<View className='flex-row items-center'>
+										<HStack className='  items-center justify-evenly'>
+											<HStack className=' items-center'>
 												<Feather name='clock' color={'#7a7a7a'} size={16} />
 												<Text className=' font-light text-base text-gray-400 ml-1'>{service.duration} min</Text>
-											</View>
-											<View className='ml-3'>
+											</HStack>
+											<Box className='ml-3'>
 												<Text className=' text-green-500 text-base'>  R$ {service.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
-											</View>
+											</Box>
 
-										</View>
-										<View className=''>
-											<SalonButton
+										</HStack>
+										<Box className=''>
+											<Button
 												onPress={() => navigate('Appointment', {
 													salonServiceId: service.id,
 													salonAvatar: salon.image,
@@ -54,21 +63,21 @@ const ServicesSalon: FC<ISalonComponent> = ({ salon }) => {
 													salonServiceDuration: service.duration,
 
 												})}
-												className='bg-[#363062] rounded-xl'>
-												<Text className='text-white'>Agendar</Text>
-											</SalonButton>
-										</View>
-									</View>
+												className='bg-tertiary-400 rounded-xl'>
+												<Text className='text-typograpy-300'>Agendar</Text>
+											</Button>
+										</Box>
+									</VStack>
 
-								</View>
-							</View>
+								</HStack>
+							</HStack>
 						)
 					})}
-				</View>
+				</VStack>
 			) : (
 				<Text className='mt-2'>Não há serviços cadastrados</Text>
 			)}
-		</View>
+		</Box>
 
 
 	)

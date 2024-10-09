@@ -1,9 +1,10 @@
 import { Feather } from '@expo/vector-icons'
 import cn from 'clsx'
 import { FC, PropsWithChildren } from 'react'
-import { Pressable, PressableProps, View } from 'react-native'
-
+import {  PressableProps, View } from 'react-native'
+import { Pressable } from 'components/ui/pressable'
 import { TypeFeatherIconNames } from '@/types/icon.interface'
+import { Box } from 'components/ui/box'
 
 interface ISalonButton extends PressableProps {
 	icon?: TypeFeatherIconNames
@@ -23,7 +24,7 @@ const SalonButton: FC<PropsWithChildren<ISalonButton>> = ({
 }) => {
 	return (
 		<Pressable {...rest}>
-			<View
+			<Box
 				className={cn(
 					'items-center justify-center overflow-hidden p-2 rounded-full',
 					className
@@ -34,7 +35,7 @@ const SalonButton: FC<PropsWithChildren<ISalonButton>> = ({
 				) : (
 					<Feather name={icon} size={iconSize} color={color} />
 				)}
-			</View>
+			</Box>
 		</Pressable>
 	)
 }

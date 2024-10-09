@@ -1,9 +1,13 @@
 export interface IAppointmentRequest {
-  salonId: string,
-  salonServiceId: string,
-  date: string
+  
+    customerId?: string,
+    employeeId?: string,
+    salonServiceId: string,
+    salonId: string,
+    couponId?: string,
+    date: string
+  
 }
-
 
 export interface IEmployee {
   id: string;
@@ -19,6 +23,6 @@ export interface IScheduleItem {
 }
 
 
-export interface IAppointment {
+export interface IAppointmentSchedule {
   schedule: IScheduleItem[];
 }

@@ -1,7 +1,15 @@
 import { FC, useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
+
 import dayjs from 'dayjs';
 import Icon from '@/components/ui/icon/Icon';
+import { Box } from 'components/ui/box';
+import { Text } from 'components/ui/text';
+import { Button } from 'components/ui/button';
+import { ScrollView } from 'components/ui/scroll-view'
+import { HStack } from 'components/ui/hstack';
+import { VStack } from 'components/ui/vstack';
+import { Pressable } from 'components/ui/pressable';
+import { TouchableOpacity } from 'react-native';
 
 interface DateSelectorProps {
   selectedDate: Date;
@@ -36,31 +44,33 @@ const DateSelector: FC<DateSelectorProps> = ({ selectedDate, setSelectedDate }) 
   };
 
   return (
-    <View className="flex flex-col">
-      <View className="flex-row justify-between px-4 items-center">
+    <VStack className="flex mt-2">
+      <HStack className="justify-between px-4 items-center">
         <TouchableOpacity className='p-2 bg-gray-300 rounded-full' onPress={prevWeek} disabled={currentWeek.isSame(today, 'week')}>
-          <Icon iconName='arrow-left' iconColor='#5b5b5b' iconSize={22} iconStyle={{ color: currentWeek.isSame(today, 'week') ? 'gray' : 'black', }} />
-
+          <Icon iconName='arrow-left' iconColor='#5b5b5b' iconSize={24} iconStyle={{ color: currentWeek.isSame(today, 'week') ? 'gray' : 'black', }} />
         </TouchableOpacity>
-        <Text className='text-base font-medium'>{currentWeek.format('MMMM, YYYY')}</Text>
+        <Text className='text-base font-medium text-typography-900'>{currentWeek.format('MMMM, YYYY')}</Text>
         <TouchableOpacity className='p-2 bg-gray-300 rounded-full' onPress={nextWeek}>
-          <Icon iconName='arrow-right' iconColor='#5b5b5b' iconSize={22} />
+          <Icon iconName='arrow-right' iconColor='black' iconSize={24} />
         </TouchableOpacity>
-      </View>
+      </HStack>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View className="flex-row justify-between mt-4 px-4">
+        <HStack space="sm" className=" justify-between mt-4 px-4">
           {getDaysOfWeek().map((day, index) => (
-            <TouchableOpacity key={index} onPress={() => setSelectedDate(day.toDate())}>
-              <View className={`mx-2 h-16 w-12 justify-center rounded-lg ${day.isSame(selectedDate, 'day') ? 'bg-blue-500' : 'bg-gray-200'}`}>
-                <Text className={`text-center font-normal text-sm ${day.isSame(selectedDate, 'day') && 'text-white'}`}>{day.format('ddd')}</Text>
-                <Text className={`text-center text-lg font-bold  ${day.isSame(selectedDate, 'day') && 'text-white'}`}>{day.format('DD')}</Text>
-              </View>
-            </TouchableOpacity>
+            <Pressable
+              className={`h-20 w-16 justify-center  rounded-lg ${day.isSame(selectedDate, 'day') ? 'bg-tertiary-400' : 'bg-typography-300'}`}
+              key={index}
+              onPress={() => setSelectedDate(day.toDate())}>
+
+              <Text className={`text-center font-normal text-base text-typography-500 ${day.isSame(selectedDate, 'day') && 'text-white'}`}>{day.format('ddd')}</Text>
+              <Text className={`text-center text-xl font-bold  text-typography-500 ${day.isSame(selectedDate, 'day') && 'text-white'}`}>{day.format('DD')}</Text>
+
+            </Pressable>
           ))}
-        </View>
+        </HStack>
       </ScrollView>
-    </View>
+    </VStack>
   );
 };
 

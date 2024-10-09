@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { FC, PropsWithChildren } from 'react'
-import { Pressable, Text } from 'react-native'
-
+import { Pressable } from 'components/ui/pressable'
+import { Text } from 'components/ui/text'
 import { IButton } from './button.interface'
 
 const Button: FC<PropsWithChildren<IButton>> = ({
@@ -12,7 +12,7 @@ const Button: FC<PropsWithChildren<IButton>> = ({
 	return (
 		<Pressable
 			className={cn(
-				'self-center bg-[#475baa] w-full py-3 font-light rounded-lg',
+				'self-center bg-tertiary-400 w-full py-3 font-light rounded-lg',
 				className
 			)}
 			{...rest}

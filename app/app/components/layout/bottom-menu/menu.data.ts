@@ -1,20 +1,20 @@
+import { Calendar, Home, Search, User } from 'lucide-react-native'
 import { IMenuItem } from './menu.interface'
 
 export const menuItems: IMenuItem[] = [
 	{
-		iconName: 'home',
-		path: 'Home'
+		icon: Home,
+		path: 'Home',
+		label:'Início'
 	},
 	{
-		iconName: 'search',
-		path: 'Search'
+		icon: Calendar,
+		path: 'AppointmentHistory',
+		label:'Agendamentos'
 	},
 	{
-		iconName: 'calendar',
-		path: 'AppointmentHistory'
-	},
-	{
-		iconName: 'user',
-		path: 'Profile'
+		icon: User,
+		path: 'Profile',
+		label:'Meu Perfil'
 	}
 ]

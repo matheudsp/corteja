@@ -1,7 +1,11 @@
 import { FC } from 'react'
-import { Image, Pressable, TouchableOpacity, View } from 'react-native'
+import { Box } from 'components/ui/box'
+import { VStack } from 'components/ui/vstack'
+import { Image } from 'components/ui/image'
 
-import { useTypedNavigation } from '@/hooks/useTypedNavigation'
+
+
+
 
 
 
@@ -17,24 +21,25 @@ interface ISalonItem {
 }
 
 const SalonItem: FC<ISalonItem> = ({ salon }) => {
-	const { navigate } = useTypedNavigation()
+
 
 	return (
-		<Pressable
-			onPress={() => navigate('Salon', { id: salon.id })}
-			className=' w-full flex-row mb-3.5'>
-			<View
-				className='border-2 w-32 h-32 rounded-xl relative overflow-hidden flex items-center justify-center'>
+		<VStack
+			
+			className='bg-typography-200 border w-72 max-w-72 border-typography-400 rounded-3xl flex-col items-center p-1.5'>
+			<Box
+				
+				className='border border-typography-400 w-full h-48 rounded-2xl relative overflow-hidden flex items-center justify-center'>
 				<Image
+					
 					// source={getMediaSource(salon.image)}
 					source={{ uri: `${salon.image}` }}
-
-					width={130}
-					height={130}
+					alt='salon logo'
+					size='full'
 				/>
-			</View>
-			<SalonInfo salon={salon} />
-		</Pressable>
+			</Box>
+			<SalonInfo  salon={salon} />
+		</VStack>
 	)
 }
 

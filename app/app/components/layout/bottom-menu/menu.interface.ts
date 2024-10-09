@@ -1,10 +1,12 @@
-import { TypeFeatherIconNames } from '@/types/icon.interface'
+
 
 import { TypeRootStackParamList } from '@/navigation/navigation.types'
+import { LucideIcon } from 'lucide-react-native'
 
 export interface IMenuItem {
-	iconName: TypeFeatherIconNames
+	icon: LucideIcon
 	path: keyof TypeRootStackParamList
+	label:string
 }
 
 export type TypeNavigate = (screenName: keyof TypeRootStackParamList) => void

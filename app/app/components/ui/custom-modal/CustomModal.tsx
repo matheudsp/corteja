@@ -1,6 +1,8 @@
-import React, { FC, useRef, useEffect, useState } from 'react';
+import React, { FC, useRef, useEffect, useState, useContext } from 'react';
 import { View, Modal, Animated } from 'react-native';
 import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
+import {Dimensions} from 'react-native';
+import { ThemeContext } from '@/providers/ThemeContext';
 
 interface CustomModalProps {
   visible: boolean;
@@ -13,7 +15,7 @@ interface CustomModalProps {
 const CustomModal: FC<CustomModalProps> = ({ visible, onClose, className, initialHeight, children}) => {
   const backgroundOpacity = useRef(new Animated.Value(0)).current;
   const [modalHeight, setModalHeight] = useState(400); 
-  
+  const {colorMode} = useContext(ThemeContext)
 
   useEffect(() => {
     Animated.timing(backgroundOpacity, {
@@ -57,6 +59,7 @@ const CustomModal: FC<CustomModalProps> = ({ visible, onClose, className, initia
             bottom: 0,
             left: 0,
             right: 0,
+            height: Dimensions.get('window').height,
             backgroundColor: 'rgba(0, 0, 0, 1)',
             opacity: backgroundOpacity,
             zIndex: 10,
@@ -81,13 +84,13 @@ const CustomModal: FC<CustomModalProps> = ({ visible, onClose, className, initia
                 right: 0,
                 height: modalHeight,
               }}
-              className={`bg-white rounded-t-lg ${className}`}
+              className={` ${colorMode === 'light' ? 'bg-background-light' : 'bg-background-dark'} rounded-t-lg ${className}`}
             >
               {/* Barra de arrastar */}
               <View className="w-10 h-1 bg-gray-400 rounded-full self-center mb-2 mt-2" />
               
               {/* Conteúdo do Modal */}
-              <View className="flex-1">
+              <View className="flex-1 ">
                 {children}
               </View>
             </View>

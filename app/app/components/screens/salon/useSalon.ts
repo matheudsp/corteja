@@ -9,7 +9,8 @@ export const useSalon = () => {
 
 	const { isLoading, data: salon } = useQuery({
 		queryKey: ['get salon by id', params.id],
-		queryFn: () => SalonService.geyById(params.id)
+		queryFn: () => SalonService.getById(params.id),
+		retry: false,
 	})
 	
 	return { isLoading, salon }

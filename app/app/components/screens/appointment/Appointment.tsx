@@ -19,14 +19,15 @@ const Appointment: FC = () => {
 
     const [showModal, setShowModal] = useState(false);
     const [employeeName, setEmployeeName] = useState<string | null>(null);
-
+    const [employeeAvatar, setEmployeeAvatar] = useState<string | null>(null);
+    
     const { params } = useTypedRoute<'Appointment'>();
     const {
         salonName,
         salonServiceName,
         salonAvatar,
         salonServiceDuration,
-        salonServicePrice
+        salonServicePrice,
     } = params;
 
     const formattedDate = selectedDate.toISOString().split('T')[0];
@@ -34,26 +35,28 @@ const Appointment: FC = () => {
 
     const filteredAppointment = appointment?.schedule.find(
         (item: IScheduleItem) => Object.keys(item)[0] === formattedDate
-      )?.[formattedDate]; 
+    )?.[formattedDate];
 
-      const handleSelectProfessional = (professionalId: string) => {
+    const handleSelectProfessional = (professionalId: string, professionalName:string, professionalAvatar: string) => {
         setSelectedProfessional(professionalId);
-      };
+        setEmployeeName(professionalName);
+        setEmployeeAvatar(professionalAvatar)
+    };
 
     const handleSelectTime = (time: string) => {
         setSelectedTime(time);
     };
-    
+
     const handleOpenModal = () => {
         setShowModal(true)
     }
 
     const availableTimes = () => {
         const professional = filteredAppointment?.employees.find(
-          (emp: IEmployee) => emp.id === selectedProfessional
+            (emp: IEmployee) => emp.id === selectedProfessional
         );
         return professional ? professional.times : [];
-      };
+    };
 
 
 
@@ -61,7 +64,9 @@ const Appointment: FC = () => {
     return (
         <Layout withoutPadding>
             <BasicHeader title="Agendamento" />
-            <DateSelector selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+            <DateSelector
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate} />
             {isLoading ? (
                 <Loader />
             ) : (
@@ -85,7 +90,8 @@ const Appointment: FC = () => {
             <CustomModal
                 visible={showModal}
                 onClose={() => setShowModal(false)}
-                initialHeight={400}
+                initialHeight={350}
+                
             >
                 <CheckoutModal
                     closeModal={() => setShowModal(false)}
@@ -95,6 +101,7 @@ const Appointment: FC = () => {
                     selectedDate={formattedDate}
                     selectedTime={selectedTime || ''}
                     employeeName={employeeName || ''}
+                    employeeAvatar={employeeAvatar || ''}
                     price={salonServicePrice}
                     duration={salonServiceDuration}
                 />

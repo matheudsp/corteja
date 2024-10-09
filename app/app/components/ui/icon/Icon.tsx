@@ -4,9 +4,9 @@ import { FC } from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
 
 interface IIconProps {
-	iconName: TypeFeatherIconNames
-	iconSize: number
-	iconColor: string
+	iconName?: TypeFeatherIconNames
+	iconSize?: number
+	iconColor?: string
     classname?: string
     iconStyle?: TextStyle | ViewStyle;
 }

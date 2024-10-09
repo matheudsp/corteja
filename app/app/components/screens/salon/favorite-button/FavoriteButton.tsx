@@ -1,19 +1,25 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 
 import { UserService } from '@/services/user.service'
 
 import { useProfile } from '../../profile/useProfile'
-import SalonButton from '../SalonButton'
+
+import { Button } from 'components/ui/button'
+import { Pressable } from 'components/ui/pressable'
+import { ThemeContext } from '@/providers/ThemeContext'
+
 
 interface IFavoriteButton {
-	SalonId: string
+	SalonId: any
+	className?: string
+	iconSize: number
 }
 
-const FavoriteButton: FC<IFavoriteButton> = ({ SalonId }) => {
+const FavoriteButton: FC<IFavoriteButton> = ({ SalonId, className, iconSize}) => {
 	const { profile } = useProfile()
-
+	const {colorMode} = useContext(ThemeContext)
 	const queryClient = useQueryClient()
 
 	const { mutate } = useMutation({
@@ -32,21 +38,26 @@ const FavoriteButton: FC<IFavoriteButton> = ({ SalonId }) => {
 	)
 
 	return (
-		<SalonButton onPress={() => mutate()}>
+		<Pressable
+			
+			className={` ${className}`}
+			onPress={() => mutate()}>
+
 			{isExists ? (
 				<MaterialCommunityIcons
-					name='heart'
-					size={22}
-					color='#DC3F41'
+					name='bookmark'
+					size={iconSize}
+					color='rgb(231 129 40)'
 				/>
 			) : (
 				<MaterialCommunityIcons
-					name='heart-outline'
-					size={22}
-					color='#555'
+					name='bookmark-outline'
+					size={iconSize}
+					color={colorMode === 'light' ? 'rgb(65 64 64)' : 'rgb(229 229 229)'}
+					
 				/>
 			)}
-		</SalonButton>
+		</Pressable>
 	)
 }
 

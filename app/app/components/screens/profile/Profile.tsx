@@ -1,9 +1,13 @@
 import { FC } from 'react'
-import { Image, View, Text } from 'react-native'
+
+import { Box } from 'components/ui/box'
+import { Text } from 'components/ui/text'
+import { Image } from 'components/ui/image'
+import { Button } from 'components/ui/button'
 
 import Layout from '@/components/layout/Layout'
 import Heading from '@/components/ui/Heading'
-import Button from '@/components/ui/button/Button'
+// import Button from '@/components/ui/button/Button'
 
 import { useAuth } from '@/hooks/useAuth'
 
@@ -19,44 +23,46 @@ const Profile: FC = () => {
 
 	return (
 		<Layout>
-			<View className='justify-between flex-row items-center'>
+			<Box className='justify-between flex-row items-center'>
 				<Heading className=''>Meu Perfil</Heading>
 
 				<Image
+					alt='logo'
 					source={require('../../../assets/logo.png')}
 					className="w-14 h-14"
 				/>
 
-			</View>
+			</Box>
 
-			<View className=' items-start mt-2 w-full h-28 justify-evenly flex-row rounded-3xl bg-blue-100'>
-				<View className='w-2/6 items-center h-full '>
+			<Box className=' items-start mt-2 w-full h-28 justify-evenly flex-row rounded-3xl bg-blue-100'>
+				<Box className='w-2/6 items-center h-full '>
 					<Image
+						alt='profile image'
 						source={{ uri: profile?.avatarPath }}
 						className='w-20 h-20 rounded-full border-4 my-auto'
 					/>
-				</View>
-				<View className='flex-col w-4/6  h-full items-start justify-center'>
-					<View className=' bg-indigo-600 px-2 py-1  rounded-2xl'>
-						<Text className='text-xs font-normal text-white'>{'Platinum'}</Text>
-					</View>
+				</Box>
+				<Box className='flex-col w-4/6  h-full items-start justify-center'>
+					<Box className=' bg-indigo-600 px-2 py-1  rounded-2xl'>
+						<Text className='text-xs font-normal text-white'>Platinum</Text>
+					</Box>
 					<Text className='text-lg font-medium'>{profile?.name}</Text>
 					<Text>{profile?.email}</Text>
-				</View>
+				</Box>
 
-			</View>
-			<View>
+			</Box>
+			<Box>
 
 				<List />
 
 
-			</View>
+			</Box>
 
 			<Button
 				onPress={() => AuthService.logout().then(() => setUser(null))}
 				className='mt-5'
 			>
-				Sair
+				<Text>Sair</Text>
 			</Button>
 
 			<Text className=' my-4 text-xs font-light'>{profile?.id} </Text>

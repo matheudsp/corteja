@@ -1,51 +1,51 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react';
 import * as Location from 'expo-location';
-import Loader from '@/components/ui/Loader'
-import Catalog from '@/components/ui/catalog/Catalog'
-
-import { useSaloons } from './useSaloons'
-
+import Loader from '@/components/ui/Loader';
+import Catalog from '@/components/ui/catalog/Catalog';
+import { useSaloons } from './useSaloons';
 
 const Saloons: FC = () => {
-	const [location, setLocation] = useState<any>(null);
-	const [errorMsg, setErrorMsg] = useState<string | null>(null);
-	const distanceLimit = 99999999
-	const { isLoading, saloons } = useSaloons(
-		location?.coords?.longitude || 0, 
-		location?.coords?.latitude || 0, 
-		distanceLimit
-	);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLocationLoading, setIsLocationLoading] = useState(true);
+  const distanceLimit = 99999999999;
 
+  const { isLoading: isSaloonsLoading, saloons } = useSaloons(
+    location?.coords?.longitude || 0,
+    location?.coords?.latitude || 0,
+    distanceLimit
+  );
 
+  useEffect(() => {
+    (async () => {
+      setIsLocationLoading(true);
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permissão para acessar localização negada.');
+        setIsLocationLoading(false);
+        return;
+      }
 
-	useEffect(() => {
-		(async () => {
-			let { status } = await Location.requestForegroundPermissionsAsync();
-			if (status !== 'granted') {
-				setErrorMsg('Permissão para acessar localização negada.');
-				return;
-			}
+      try {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      } catch (error) {
+        setErrorMsg('Erro ao obter a localização.');
+      } finally {
+        setIsLocationLoading(false);
+      }
+    })();
+  }, []);
 
-			let location = await Location.getCurrentPositionAsync({});
-			setLocation(location);
-		})();
-	}, []);
+  if (isLocationLoading || isSaloonsLoading) {
+    return <Loader />;
+  }
 
-	let text = 'Carregando...';
-	if (errorMsg) {
-		text = errorMsg;
-	} else if (location) {
-		text = `Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`;
-	}
+  if (errorMsg) {
+    return <div>{errorMsg}</div>;
+  }
 
+  return <Catalog title="Próximos a você" isLoading={isSaloonsLoading} saloons={saloons || []} />;
+};
 
-	return isLoading ? (
-		<Loader />
-	) : (
-
-		<Catalog title='Próximos a você' saloons={saloons || []} filterButton/>
-
-	)
-}
-
-export default Saloons
+export default Saloons;

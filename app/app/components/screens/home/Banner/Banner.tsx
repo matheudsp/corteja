@@ -1,34 +1,38 @@
 import { FC } from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+
 
 import { useTypedNavigation } from '@/hooks/useTypedNavigation'
-
+import { Box } from 'components/ui/box'
+import { Text } from 'components/ui/text'
+import { Image } from 'components/ui/image'
+import { Pressable } from 'components/ui/pressable'
 const Banner: FC = () => {
 	const { navigate } = useTypedNavigation()
 
 	return (
-		<View className='mt-4 w-full items-center bg-[#475baa] px-5 py-5 rounded-2xl justify-between flex-row'>
-			<View>
+		<Box className='mt-4 w-full items-center bg-tertiary-400 px-5 py-5 rounded-2xl justify-between flex-row'>
+			<Box>
 				<Text className='font-medium w-56 text-white text-xl'>
 					A melhor escolha para você
 				</Text>
 
 				<Pressable
-					onPress={() => navigate('Explorer')}
-					className='bg-black py-2 rounded-full w-32 mt-4'
+					
+					className='bg-black p-2 rounded-full w-36 mt-4'
 				>
-					<Text className='text-white font-medium text-center'>
+					<Text className='text-white  font-medium text-center'>
 						Agende agora
 					</Text>
 				</Pressable>
-			</View>
-			<View>
+			</Box>
+			<Box>
 				<Image
 					source={require('../../../../assets/logo.png')}
+					alt='banner image'
 					className="w-28 h-28"
 				/>
-			</View>
-		</View>
+			</Box>
+		</Box>
 	)
 }
 

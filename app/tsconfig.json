@@ -5,7 +5,13 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"]
+      "@/*": [
+        "./app/*"
+      ]
     }
   },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+, "app/components/ui/ParallaxScrollView"  ]
 }

@@ -21,8 +21,8 @@ export const SalonService = {
 	},
 
 
-	async geyById(id: string) {
-		return request<ISalon>({
+	async getById(id: string) {
+		return await request<ISalon>({
 			url: getSaloonsUrl(`/by-id/${id}`),
 			method: 'GET'
 		})

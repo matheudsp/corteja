@@ -1,7 +1,8 @@
-import { TypeFeatherIconNames } from '@/types/icon.interface'
+
+import { LucideIcon } from 'lucide-react-native'
 
 export interface IHorizontalItem {
-	iconName: TypeFeatherIconNames
+	icon: LucideIcon
 	title: string
 }
 

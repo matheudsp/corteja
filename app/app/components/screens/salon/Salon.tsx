@@ -1,78 +1,88 @@
-import { FC, useState } from 'react'
-import { Image, View, Text } from 'react-native'
-
-import Layout from '@/components/layout/Layout'
+import { FC, useContext, useState } from 'react'
+import { Animated, ScrollView, Image, View } from 'react-native'
 import { useSalon } from './useSalon'
 import Loader from '@/components/ui/Loader'
 import SalonHeader from './SalonHeader'
 import { getMediaSource } from '@/utils/getMediaSource'
 import SalonInfo from './salon-info/SalonInfo'
 import HorizontalList from './horizontalList/HorizontalList'
-
 import { horizontalItems } from './horizontalList/horizontal.data'
 import AboutSalon from './about-salon/AboutSalon'
 import ServicesSalon from './services-salon/ServicesSalon'
 import Coupon from './coupon/Coupon'
 import Schedule from './schedule/Schedule'
-
-
-
+import { Box } from 'components/ui/box'
+import { ThemeContext } from '@/providers/ThemeContext'
 
 const Salon: FC = () => {
 	const { isLoading, salon } = useSalon()
-	const [activeIndex, setActiveIndex] = useState(0);
+	const [activeIndex, setActiveIndex] = useState<number>(0);
+	const { colorMode } = useContext(ThemeContext)
+	const scrollY = useState(new Animated.Value(0))[0];
 
-	if (isLoading) return <Loader />
-	if (!salon) return null
+	if (isLoading || !salon) {
+		return <Loader />
+	}
 
-	const renderContent = () => {
-		switch (activeIndex) {
-			case 0:
-				return <AboutSalon salon={salon} />; // Conteúdo de 'Sobre'
-			case 1:
-				return <ServicesSalon salon={salon} />; // Conteúdo de 'Serviços'
-			case 2:
-				return <Schedule salon={salon}/>; // Conteúdo de 'Agendamentos'
-			case 3:
-				return <Coupon salon={salon}/>; // Conteúdo de 'Cupons'
-			default:
-				return null;
-		}
-	};
+	const componentsMap: { [key: number]: JSX.Element } = {
+		0: <AboutSalon isLoading={isLoading} salon={salon} />,
+		1: <ServicesSalon isLoading={isLoading} salon={salon} />,
+		2: <Schedule isLoading={isLoading} salon={salon} />,
+		3: <Coupon isLoading={isLoading} salon={salon} />
+	}
+
+	const headerBackgroundColor = scrollY.interpolate({
+		inputRange: [0, 100],
+		outputRange: ['transparent', colorMode === 'light' ? '#E5E5E5' : '#262626'],
+		extrapolate: 'clamp',
+	});
+
+	const imageTranslateY = scrollY.interpolate({
+		inputRange: [0, 200],
+		outputRange: [0, -100],
+		extrapolate: 'clamp',
+	});
 
 	return (
+		<Box className='flex-1 mt-10'>
 
-		<Layout withoutPadding>
-			<View className='px-4'>
-				<SalonHeader salon={salon} />
-				<View className='items-center justify-center mt-4'>
-					<Image
-						className='rounded-3xl'
-						source={{ uri: salon.image }}
-						// source={getMediaSource(salon.image)}
-						width={360}
-						height={120}
-					/>
-				</View>
+			<SalonHeader salon={salon} backgroundColor={headerBackgroundColor} />
+			<Animated.ScrollView
+				showsVerticalScrollIndicator={false}
+				scrollEventThrottle={16}
+				onScroll={Animated.event(
+					[{ nativeEvent: { contentOffset: { y: scrollY } } }],
+					{ useNativeDriver: false }
+				)}
+			>
+
+
+				<Animated.Image
+					source={{ uri: salon.image }}
+					style={{
+						zIndex: -1,
+						height: 200,
+						width: '100%',
+						transform: [{ translateY: imageTranslateY }],
+					}}
+				/>
+
 
 				<SalonInfo salon={salon} />
 
-			</View>
 
-			<HorizontalList
-				activeIndex={activeIndex}
-				setActiveIndex={setActiveIndex}
-				horizontalItems={horizontalItems}
-			/>
+				<HorizontalList
+					activeIndex={activeIndex}
+					setActiveIndex={setActiveIndex}
+					horizontalItems={horizontalItems}
+				/>
 
-			<View className="px-4">
-				{renderContent()}
-			</View>
-			
-
-		</Layout>
-
-
+				<Box className="px-4">
+					{componentsMap[activeIndex]}
+				</Box>
+				
+			</Animated.ScrollView>
+		</Box>
 	)
 }
 

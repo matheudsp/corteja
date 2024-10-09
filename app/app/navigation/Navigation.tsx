@@ -42,7 +42,7 @@ const Navigation: FC = () => {
 	return (
 		<>
 			<NavigationContainer ref={navRef}>
-				<PrivateNavigator />
+				<PrivateNavigator/>
 			</NavigationContainer>
 			{user && shouldShowBottomMenu && (
 				<BottomMenu nav={navRef.navigate} currentRoute={currentRoute} />
