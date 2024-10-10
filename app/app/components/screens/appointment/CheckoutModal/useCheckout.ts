@@ -7,14 +7,18 @@ export const useCheckout = () => {
     const { params } = useTypedRoute<'Appointment'>();
 
     const { isLoading, data: checkout } = useQuery({
-        queryKey: ['create-appointment' ],
+        queryKey: ['create-appointment'],
         queryFn: () => AppointmentService.createAppointment({
-          salonId: params.salonId
-          
-           
+            salonId: '',
+            date: '',
+            salonServiceId: '',
+            couponId: '',
+            customerId: '',
+            employeeId: ''
+
         })
 
     });
-    return { isLoading,  }
+    return { isLoading, checkout}
 
 };

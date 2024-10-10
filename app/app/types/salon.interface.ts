@@ -15,7 +15,7 @@ interface Address {
 }
 
 // Tipo para serviços do salão
-interface SalonService {
+export interface ISalonService {
   id: string;
   salonId: string;
   createdAt: string;
@@ -96,7 +96,7 @@ export interface ISalon {
   geoCoordinates: GeoCoordinates;
   employee: Employee[];
   address: Address;
-  salonServices: SalonService[];
+  salonServices: ISalonService[];
   coupons: Coupon[];
   servicesRendered: ServiceRendered[];
   appointments: Appointment[];

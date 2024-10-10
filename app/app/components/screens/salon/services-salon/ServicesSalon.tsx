@@ -16,8 +16,27 @@ import { useTypedNavigation } from '@/hooks/useTypedNavigation'
 import { VStack } from 'components/ui/vstack';
 import { Button } from 'components/ui/button';
 
+import { useDispatch } from 'react-redux';
+import { resetSalonState, setSalonAvatar, setSalonId, setSalonName, setSalonServiceDuration, setSalonServiceId, setSalonServiceName, setSalonServicePrice } from '@/store/salon/salon.slice';
+import { ISalon, ISalonService } from '@/types/salon.interface';
+
+
 const ServicesSalon: FC<ISalonComponent> = ({ salon }) => {
 	const { navigate } = useTypedNavigation()
+	const dispatch = useDispatch();
+
+	const handleService = (service: ISalonService, salon: ISalon) => {
+		dispatch(resetSalonState()), 
+		dispatch(setSalonId(salon.id))
+		dispatch(setSalonServiceId(service.id))
+		dispatch(setSalonName(salon.name))
+		dispatch(setSalonServiceName(service.name))
+		dispatch(setSalonServicePrice(service.price))
+		dispatch(setSalonServiceDuration(service.duration))
+		dispatch(setSalonAvatar(salon.image))
+		navigate('Appointment')
+	}
+
 	return (
 
 		<Box className='my-4'>
@@ -53,16 +72,9 @@ const ServicesSalon: FC<ISalonComponent> = ({ salon }) => {
 										</HStack>
 										<Box className=''>
 											<Button
-												onPress={() => navigate('Appointment', {
-													salonServiceId: service.id,
-													salonAvatar: salon.image,
-													salonName: salon.name,
-													salonServiceName: service.name,
-													salonId: salon.id,
-													salonServicePrice: service.price,
-													salonServiceDuration: service.duration,
-
-												})}
+												onPress={() => {
+													handleService(service, salon)
+												}}
 												className='bg-tertiary-400 rounded-xl'>
 												<Text className='text-typograpy-300'>Agendar</Text>
 											</Button>

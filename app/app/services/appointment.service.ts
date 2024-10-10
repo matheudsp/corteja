@@ -1,10 +1,10 @@
 import { request } from './api/request.api';
 
-import { IAppointmentSchedule, IAppointmentRequest } from '@/types/appointment.interface';
+import { IAppointmentSchedule, IAppointment } from '@/types/appointment.interface';
 import { getAppointmentsUrl } from '@/config/api.config';
 
 export const AppointmentService = {
-  async verifyDisponibility({ date, salonId, salonServiceId }: IAppointmentRequest) {
+  async verifyDisponibility({ date, salonId, salonServiceId }: IAppointment) {
 
     return request<IAppointmentSchedule>({
       url: getAppointmentsUrl(`/verify/`),
@@ -17,8 +17,8 @@ export const AppointmentService = {
 
   },
 
-  async createAppointment(data: IAppointmentRequest) {
-    return request<IAppointmentRequest>({
+  async createAppointment(data: IAppointment) {
+    return request<IAppointment>({
       url: getAppointmentsUrl(''),
       method: 'POST',
       data

@@ -1,5 +1,4 @@
-export interface IAppointmentRequest {
-  
+export interface IAppointment {
     customerId?: string,
     employeeId?: string,
     salonServiceId: string,

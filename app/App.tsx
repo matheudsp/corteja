@@ -9,13 +9,13 @@ import { Provider } from 'react-redux'
 // import Toast from '@/components/ui/Toast'
 import AuthProvider from '@/providers/AuthProvider'
 import Navigation from '@/navigation/Navigation'
-// import { persistor, store } from '@/store/store'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState } from 'react';
 import React from 'react';
 
 import * as Linking from "expo-linking";
 import { ThemeContext } from '@/providers/ThemeContext';
+import store from '@/store/store';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -58,26 +58,16 @@ export default function App() {
         <ThemeContext.Provider value={{ colorMode, toggleColorMode }}>
             <GluestackUIProvider mode={colorMode}>
                 <QueryClientProvider client={queryClient}>
-                    {/* <Provider store={store}> */}
-                    {/* <PersistGate persistor={persistor} loading={null}> */}
-                    <AuthProvider>
-
-                        <SafeAreaProvider>
-                            {/* <StripeProvider
-                                    publishableKey={
-                                        process.env.STRIPE_KEY as string
-                                    }
-                                > */}
-                            <StatusBar />
-                            <Navigation />
-                            {/* </StripeProvider> */}
-                        </SafeAreaProvider>
-
-                    </AuthProvider>
-
-                    {/* <Toast /> */}
-                    {/* </PersistGate> */}
-                    {/* </Provider> */}
+                    <Provider store={store}>
+                        {/* <PersistGate persistor={persistor} loading={null}> */}
+                        <AuthProvider>
+                            <SafeAreaProvider>
+                                <StatusBar />
+                                <Navigation />
+                            </SafeAreaProvider>
+                        </AuthProvider>
+                        {/* </PersistGate> */}
+                    </Provider>
                 </QueryClientProvider>
             </GluestackUIProvider>
         </ThemeContext.Provider>

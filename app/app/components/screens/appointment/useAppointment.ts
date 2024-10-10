@@ -1,20 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { useTypedRoute } from '@/hooks/useTypedRoute';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 import { AppointmentService } from '@/services/appointment.service';
 
-
 export const useAppointment = (date: string) => {
-    const { params } = useTypedRoute<'Appointment'>();
+    
+    const salonServiceId = useSelector((state: RootState) => state.salon.salonServiceId);
+    const salonId = useSelector((state: RootState) => state.salon.salonId);
 
     const { isLoading, data: appointment } = useQuery({
-        queryKey: ['get-disponibility', date, params.salonServiceId, params.salonId],
+        queryKey: ['get-disponibility', date, salonServiceId, salonId],
         queryFn: () => AppointmentService.verifyDisponibility({
             date, 
-            salonServiceId: params.salonServiceId, 
-            salonId: params.salonId
+            salonServiceId, 
+            salonId
         })
-
     });
-    return { isLoading, appointment }
 
+    return { isLoading, appointment };
 };
