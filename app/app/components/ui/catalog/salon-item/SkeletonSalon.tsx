@@ -12,6 +12,7 @@ const SkeletonSalon = () => {
         className='px-4 '>
         {Array.from({ length: 3 }).map((_, index) => (
             <VStack
+                space="md"
                 key={index}
                 className='gap-2 bg-typography-100 border w-72 p-3 max-w-72 border-typography-400 rounded-3xl items-center'>
                 <Skeleton variant="rounded" className="h-[138px] p-1.5" />
@@ -35,7 +36,7 @@ const SkeletonSalon = () => {
                         <Button
                             size='xl'
                             className='bg-tertiary-400 w-[70%] rounded-lg'>
-                            <Text className='text-typography-800 font-medium text-lg uppercase'>
+                            <Text className='text-typography-800 font-mono text-base uppercase'>
                                 Agendar
                             </Text>
                         </Button>

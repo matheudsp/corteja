@@ -3,6 +3,8 @@ import * as Location from 'expo-location';
 import Loader from '@/components/ui/Loader';
 import Catalog from '@/components/ui/catalog/Catalog';
 import { useSaloons } from './useSaloons';
+import { Box } from 'components/ui/box';
+import { Text } from 'components/ui/text';
 
 const Saloons: FC = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -37,15 +39,13 @@ const Saloons: FC = () => {
     })();
   }, []);
 
-  if (isLocationLoading || isSaloonsLoading) {
-    return <Loader />;
-  }
+  const isLoading = isLocationLoading || isSaloonsLoading;
 
   if (errorMsg) {
-    return <div>{errorMsg}</div>;
+    return <Box><Text>{errorMsg}</Text>;</Box>
   }
-
-  return <Catalog title="Próximos a você" isLoading={isSaloonsLoading} saloons={saloons || []} />;
+  
+  return <Catalog title="Próximos a você" isLoading={isLoading} saloons={saloons || []} />;
 };
 
 export default Saloons;

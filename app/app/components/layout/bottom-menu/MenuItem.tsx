@@ -19,7 +19,7 @@ const MenuItem: FC<IMenuItemProps> = ({ currentRoute, item, nav }) => {
 
 	return (
 		<Pressable
-			className={`items-center  w-[25%]`}
+			className={`items-center  w-[33%]`}
 			onPress={() => nav(item.path)}
 		>
 			<VStack className='items-center'>
@@ -38,6 +38,7 @@ const MenuItem: FC<IMenuItemProps> = ({ currentRoute, item, nav }) => {
 				<Text
 					size="xs"
 					className={`
+						font-rubik font-semibold text-base
 						${isActive
 							? "text-typography-900" 
 							: "text-typography-400" 

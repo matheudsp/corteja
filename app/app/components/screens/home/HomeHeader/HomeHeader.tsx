@@ -32,7 +32,7 @@ const HomeHeader: FC = () => {
 			<HStack className='justify-between py-2 items-center'>
 				<Box className='justify-center items-start'>
 					<Text className='text-xl font-light text-typography-700'>{formattedDate}</Text>
-					<Text className='text-2xl uppercase font-normal text-typography-900'>Olá, {profile?.name}</Text>
+					<Text className='text-2xl uppercase font-normal font-rubik text-typography-900'>Olá, {profile?.name}</Text>
 				</Box>
 				<ModeChangeButton />
 			</HStack>

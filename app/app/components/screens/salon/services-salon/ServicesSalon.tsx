@@ -76,7 +76,7 @@ const ServicesSalon: FC<ISalonComponent> = ({ salon }) => {
 													handleService(service, salon)
 												}}
 												className='bg-tertiary-400 rounded-xl'>
-												<Text className='text-typograpy-300'>Agendar</Text>
+												<Text className='text-typography-white uppercase font-mono text-xs'>Agendar</Text>
 											</Button>
 										</Box>
 									</VStack>

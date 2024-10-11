@@ -80,7 +80,7 @@ const SalonInfo: FC<ISalonInfo> = ({ salon }) => {
 					onPress={() => navigate('Salon', { id: salon.id })}
 					size='xl'
 					className='bg-tertiary-400 w-[70%] rounded-lg'>
-					<Text className='text-white font-medium text-lg uppercase'>Agendar</Text>
+					<Text className='text-typography-white font-mono text-base uppercase'>Agendar</Text>
 				</Button>
 			</HStack>
 		</VStack>

@@ -1154,6 +1154,16 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo-google-fonts/rubik-mono-one@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/rubik-mono-one/-/rubik-mono-one-0.2.3.tgz#36bde131f436d548d816795549b67d40f8239823"
+  integrity sha512-p2NIHIQEKv+pHWmNvuo/GwVFAGaL6ushpZseX2SwfFK6w4P1Dm7e/22sA/jRhPYTRvUZgIiY3+bvvPZI4jr0EA==
+
+"@expo-google-fonts/rubik@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/rubik/-/rubik-0.2.3.tgz#2acd302508d25155a87811f88f1dae313cc48c2b"
+  integrity sha512-6qqK3qgBDtjqjfDfgzh7mcduRLp5AuKCkOfafde+VaA+q0S/6levqCLg27st5vNWGGcsRLgT4xWtm2+Fv+agJQ==
+
 "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@expo/bunyan/-/bunyan-4.0.0.tgz"
@@ -4825,6 +4835,13 @@ expo-file-system@~17.0.1:
   version "17.0.1"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-17.0.1.tgz"
   integrity sha512-dYpnZJqTGj6HCYJyXAgpFkQWsiCH3HY1ek2cFZVHFoEc5tLz9gmdEgTF6nFHurvmvfmXqxi7a5CXyVm0aFYJBw==
+
+expo-font@~12.0.10:
+  version "12.0.10"
+  resolved "https://registry.yarnpkg.com/expo-font/-/expo-font-12.0.10.tgz#62deaf1f46159d7839f01305f44079268781b1db"
+  integrity sha512-Q1i2NuYri3jy32zdnBaHHCya1wH1yMAsI+3CCmj9zlQzlhsS9Bdwcj2W3c5eU5FvH2hsNQy4O+O1NnM6o/pDaQ==
+  dependencies:
+    fontfaceobserver "^2.1.0"
 
 expo-font@~12.0.8:
   version "12.0.8"

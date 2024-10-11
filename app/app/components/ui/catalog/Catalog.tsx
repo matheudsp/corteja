@@ -16,10 +16,10 @@ import SkeletonSalon from './salon-item/SkeletonSalon'
 const Catalog: FC<ICatalog> = ({ title, saloons, filterButton, isLoading }) => {
 	return (
 		<VStack space="md" className='mb-16 mt-4'>
-			<HStack className='py-2 px-4 justify-between flex items-center'>
+			<HStack className='p-4 justify-between flex items-center'>
 				{title && <Heading className='uppercase text-xl font-medium text-typography-900'>{title}</Heading>}
 				{filterButton &&
-					<TouchableOpacity className='bg-[#475baa] p-2 rounded-full'>
+					<TouchableOpacity className='bg-tertiary-400 p-2 rounded-full'>
 						<Icon
 							iconColor='white'
 							iconName='filter'
@@ -28,8 +28,8 @@ const Catalog: FC<ICatalog> = ({ title, saloons, filterButton, isLoading }) => {
 					</TouchableOpacity>}
 
 			</HStack>
-
-			{isLoading ? (
+			
+			{isLoading ? ( 
 				<SkeletonSalon />
 			)
 				:

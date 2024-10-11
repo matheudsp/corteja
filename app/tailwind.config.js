@@ -3,7 +3,14 @@ const gluestackPlugin = require("@gluestack-ui/nativewind-utils/tailwind-plugin"
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
-  content: ["./app/**/*.{tsx,jsx,ts,js}", "./components/**/*.{tsx,jsx,ts,js}", "./app/components/screens/**/*.{tsx,jsx,ts,js}"],
+  content:
+    [
+      "./app/**/*.{tsx,jsx,ts,js}",
+      "./components/**/*.{tsx,jsx,ts,js}",
+      "./app/components/screens/**/*.{tsx,jsx,ts,js}",
+      "./app/components/screens/***/**/*.{tsx,jsx,ts,js}",
+      
+    ],
   presets: [require('nativewind/preset')],
   safelist: [
     {
@@ -173,8 +180,8 @@ module.exports = {
       fontFamily: {
         heading: undefined,
         body: undefined,
-        mono: undefined,
-        roboto: ['Roboto', 'sans-serif'],
+        mono: ['Rubik Mono One', 'sans-serif'],
+        rubik: ['Rubik', 'sans-serif']
       },
       fontWeight: {
         extrablack: '950',
